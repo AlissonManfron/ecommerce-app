@@ -1,76 +1,60 @@
-package br.com.amanfron.ecommerce_app.features.login
+package br.com.amanfron.ecommerce_app.features.createaccount
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import br.com.amanfron.ecommerce_app.R
-import br.com.amanfron.ecommerce_app.ui.theme.EcommerceappTheme
-import br.com.amanfron.ecommerce_app.utils.NavRoutes
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LoginScreen(
+fun CreateAccountScreen(
     keyboardController: SoftwareKeyboardController?,
-    navController: NavController,
-    viewModel: LoginViewModel
+    viewModel: CreateAccountViewModel,
+    navController: NavHostController
 ) {
+    val name = viewModel.name.collectAsState()
     val email = viewModel.email.collectAsState()
     val password = viewModel.password.collectAsState()
 
-    LoginScreen(
+    CreateAccountScreen(
+        name.value,
         email.value,
         password.value,
-        keyboardController,
+        onNameChanged = viewModel::setName,
         onEmailChanged = viewModel::setEmail,
         onPasswordChanged = viewModel::setPassword,
-        onButtonLoginClick = viewModel::onButtonLoginClick,
-        onButtonCreateAccountClick = { navController.navigate(NavRoutes.CREATE_ACCOUNT) }
+        onButtonCreateAccountClick = viewModel::onButtonCreateAccountClick,
+        keyboardController
     )
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun LoginScreen(
+fun CreateAccountScreen(
+    name: String,
     email: String,
     password: String,
-    keyboardController: SoftwareKeyboardController?,
+    onNameChanged: (name: String) -> Unit,
     onEmailChanged: (email: String) -> Unit,
     onPasswordChanged: (password: String) -> Unit,
-    onButtonLoginClick: () -> Unit,
-    onButtonCreateAccountClick: () -> Unit
+    onButtonCreateAccountClick: () -> Unit,
+    keyboardController: SoftwareKeyboardController?
 ) {
 
     Column(
@@ -89,16 +73,29 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
+            value = name,
+            onValueChange = { onNameChanged(it) },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            label = { Text("Nome") },
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextField(
             value = email,
             onValueChange = { onEmailChanged(it) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
             ),
+            label = { Text("Email") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-            placeholder = { Text(text = "Email") }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -109,35 +106,28 @@ fun LoginScreen(
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
-                    onButtonLoginClick()
+                    onButtonCreateAccountClick()
                 }
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
+            label = { Text("Senha") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-            placeholder = { Text(text = "Password") }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { onButtonLoginClick() },
+            onClick = onButtonCreateAccountClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
         ) {
-            Text(text = "Login")
-        }
-
-        TextButton(
-            onClick = { onButtonCreateAccountClick() }
-        ) {
-            Text(text = "Crie sua conta aqui")
+            Text(text = "Criar Conta")
         }
     }
 }
@@ -145,16 +135,15 @@ fun LoginScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
-    EcommerceappTheme {
-        LoginScreen(
-            "",
-            "",
-            null,
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onButtonLoginClick = {},
-            onButtonCreateAccountClick = {}
-        )
-    }
+fun PreviewCreateAccountScreen() {
+    CreateAccountScreen(
+        "",
+        "",
+        "",
+        onNameChanged = {},
+        onEmailChanged = {},
+        onPasswordChanged = {},
+        onButtonCreateAccountClick = {},
+        null
+    )
 }
