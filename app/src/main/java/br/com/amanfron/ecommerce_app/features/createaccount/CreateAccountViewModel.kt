@@ -6,11 +6,12 @@ import kotlinx.coroutines.flow.StateFlow
 
 class CreateAccountViewModel : ViewModel() {
     private val _name = MutableStateFlow("")
-    private val _email = MutableStateFlow("")
-    private val _password = MutableStateFlow("")
-
     val name: StateFlow<String> = _name
+
+    private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email
+
+    private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password
 
     fun setName(newName: String) {
