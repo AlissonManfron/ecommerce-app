@@ -19,7 +19,9 @@ import br.com.amanfron.ecommerce_app.features.login.LoginScreen
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceappTheme
 import br.com.amanfron.ecommerce_app.utils.NavRoutes
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,8 +30,8 @@ class MainActivity : ComponentActivity() {
             EcommerceappTheme {
                 val navController = rememberNavController()
                 val keyboardController = LocalSoftwareKeyboardController.current
-                NavHost(navController = navController, startDestination = NavRoutes.HOME) {
-                    composable("home") {
+                NavHost(navController = navController, startDestination = NavRoutes.LOGIN) {
+                    composable(NavRoutes.LOGIN) {
                         val viewModel: LoginViewModel by viewModels()
                         LoginScreen(
                             keyboardController,
