@@ -1,5 +1,6 @@
 package br.com.amanfron.ecommerce_app.features.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,34 +10,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.amanfron.ecommerce_app.R
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginViewState
+import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceappTheme
 import br.com.amanfron.ecommerce_app.utils.NavRoutes
 
@@ -47,25 +44,44 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel
 ) {
-    val email = viewModel.email.collectAsState()
-    val password = viewModel.password.collectAsState()
+    val context = LocalContext.current
+    val state = viewModel.state.value
 
     LoginScreen(
-        email.value,
-        password.value,
+        state,
         keyboardController,
         onEmailChanged = viewModel::setEmail,
         onPasswordChanged = viewModel::setPassword,
         onButtonLoginClick = viewModel::onButtonLoginClick,
         onButtonCreateAccountClick = { navController.navigate(NavRoutes.CREATE_ACCOUNT) }
     )
+
+    DisposableEffect(state) {
+        when {
+            state.isSuccessLogin -> {
+                Toast.makeText(context, "Logado com sucesso!", Toast.LENGTH_SHORT).show()
+                navController.navigate(NavRoutes.HOME)
+            }
+
+            state.shouldShowDefaultError -> {
+                Toast.makeText(
+                    context,
+                    "Ops, ocorreu um erro, tente novamente!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        onDispose {
+            state.isSuccessLogin = false
+            state.shouldShowDefaultError = false
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
-    email: String,
-    password: String,
+    state: LoginViewState,
     keyboardController: SoftwareKeyboardController?,
     onEmailChanged: (email: String) -> Unit,
     onPasswordChanged: (password: String) -> Unit,
@@ -89,7 +105,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = email,
+            value = state.email,
             onValueChange = { onEmailChanged(it) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
@@ -100,11 +116,12 @@ fun LoginScreen(
                 .padding(8.dp),
             placeholder = { Text(text = "Email") }
         )
+        OutlinedTextError(state.isEmailError)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = password,
+            value = state.password,
             onValueChange = { onPasswordChanged(it) },
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -122,6 +139,7 @@ fun LoginScreen(
                 .padding(8.dp),
             placeholder = { Text(text = "Password") }
         )
+        OutlinedTextError(state.isPasswordError)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -133,6 +151,8 @@ fun LoginScreen(
         ) {
             Text(text = "Login")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(
             onClick = { onButtonCreateAccountClick() }
@@ -148,8 +168,7 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     EcommerceappTheme {
         LoginScreen(
-            "",
-            "",
+            LoginViewState(),
             null,
             onEmailChanged = {},
             onPasswordChanged = {},
