@@ -3,7 +3,7 @@ package br.com.amanfron.ecommerce_app.di
 import br.com.amanfron.ecommerce_app.core.model.UserService
 import br.com.amanfron.ecommerce_app.core.network.ResponseHandler
 import br.com.amanfron.ecommerce_app.core.network.ResponseHandlerImpl
-import br.com.amanfron.ecommerce_app.core.repository.UserRepository
+import br.com.amanfron.ecommerce_app.core.repository.AuthRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -52,10 +52,10 @@ object AppModule {
     }
 
     @Provides
-    fun provideUserRepository(
+    fun provideAuthRepository(
         userService: UserService,
         responseHandler: ResponseHandler
-    ): UserRepository {
-        return UserRepository(userService, responseHandler)
+    ): AuthRepository {
+        return AuthRepository(userService, responseHandler)
     }
 }

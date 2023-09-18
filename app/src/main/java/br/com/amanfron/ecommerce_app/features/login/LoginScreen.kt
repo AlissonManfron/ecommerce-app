@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginViewState
+import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceappTheme
 import br.com.amanfron.ecommerce_app.utils.NavRoutes
@@ -159,6 +160,10 @@ fun LoginScreen(
         ) {
             Text(text = "Crie sua conta aqui")
         }
+    }
+
+    if (state.shouldShowLoading) {
+        LoadingView()
     }
 }
 

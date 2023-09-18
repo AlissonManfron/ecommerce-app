@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: UserRepository,
+    private val userRepository: UserRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
@@ -27,17 +27,17 @@ class LoginViewModel @Inject constructor(
         _state.value = state.value.copy(
             email = newEmail
         )
-        verifyErrorFields()
+        checkFieldErrors()
     }
 
     fun setPassword(newPassword: String) {
         _state.value = state.value.copy(
             password = newPassword
         )
-        verifyErrorFields()
+        checkFieldErrors()
     }
 
-    private fun verifyErrorFields() {
+    private fun checkFieldErrors() {
         _state.value = state.value.copy(
             isEmailError = _state.value.email.isEmpty(),
             isPasswordError = _state.value.password.isEmpty()
@@ -50,7 +50,7 @@ class LoginViewModel @Inject constructor(
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
             viewModelScope.launch {
-                repository.login(email, password)
+                authRepository.login(email, password)
                     .catch { onLoginError() }
                     .onStart { shouldShowLoading(true) }
                     .onCompletion { shouldShowLoading(false) }
@@ -60,7 +60,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onLoginSuccess(response: LoginResponse) {
-        authRepository.setUser(response.name, response.email, response.token)
+        userRepository.setUser(response.name, response.email, response.token)
         _state.value = state.value.copy(
             isSuccessLogin = true
         )

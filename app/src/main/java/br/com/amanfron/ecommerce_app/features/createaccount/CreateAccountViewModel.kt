@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateAccountViewModel @Inject constructor(
-    private val repository: UserRepository,
+    private val userRepository: UserRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
@@ -59,7 +59,7 @@ class CreateAccountViewModel @Inject constructor(
 
         if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
             viewModelScope.launch {
-                repository.register(name, email, password)
+                authRepository.register(name, email, password)
                     .catch { onRegisterError() }
                     .onStart { shouldShowLoading(true) }
                     .onCompletion { shouldShowLoading(false) }
@@ -75,7 +75,7 @@ class CreateAccountViewModel @Inject constructor(
     }
 
     private fun onRegisterSuccess(response: RegisterResponse) {
-        authRepository.setUser(response.name, response.email, response.token)
+        userRepository.setUser(response.name, response.email, response.token)
         _state.value = state.value.copy(
             isRegisterIsSuccess = true
         )
