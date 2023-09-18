@@ -1,3 +1,20 @@
 <resources>
+    <!-- Common Area -->
     <string name="app_name">Ecommerce</string>
+    <string name="try_again_message">Ops, ocorreu um erro, tente novamente!</string>
+    <string name="name_field_hint">Nome</string>
+    <string name="email_field_hint">Email</string>
+    <string name="password_field_hint">Senha</string>
+    <!-- End Area-->
+
+    <!-- Login Screen Area -->
+    <string name="login_success_message">Logado com sucesso!</string>
+    <string name="login_create_account_button_text">Crie sua conta aqui</string>
+    <string name="login_login_button_text">Login</string>
+    <!-- End Area-->
+
+    <!-- Create Account Screen Area -->
+    <string name="create_account_success_message">Registrado com sucesso!</string>
+    <string name="create_account_button_text">Criar Conta</string>
+    <!-- End Area-->
 </resources>

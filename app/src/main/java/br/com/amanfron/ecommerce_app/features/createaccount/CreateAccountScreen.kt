@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -47,15 +48,15 @@ fun CreateAccountScreen(
     DisposableEffect(state) {
         when {
             state.isRegisterIsSuccess -> {
-                Toast.makeText(context, "Registrado com sucesso!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context, R.string.create_account_success_message, Toast.LENGTH_SHORT
+                ).show()
                 navController.popBackStack()
             }
 
             state.shouldShowDefaultError -> {
                 Toast.makeText(
-                    context,
-                    "Ops, ocorreu um erro, tente novamente!",
-                    Toast.LENGTH_SHORT
+                    context, R.string.try_again_message, Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -99,7 +100,7 @@ fun CreateAccountScreen(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
-            label = { Text("Nome") },
+            label = { Text(stringResource(id = R.string.name_field_hint)) },
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -114,7 +115,7 @@ fun CreateAccountScreen(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
             ),
-            label = { Text("Email") },
+            label = { Text(stringResource(id = R.string.email_field_hint)) },
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -135,7 +136,7 @@ fun CreateAccountScreen(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
-            label = { Text("Senha") },
+            label = { Text(stringResource(id = R.string.password_field_hint)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
@@ -150,7 +151,7 @@ fun CreateAccountScreen(
                 .fillMaxWidth()
                 .height(48.dp)
         ) {
-            Text(text = "Criar Conta")
+            Text(text = stringResource(id = R.string.create_account_button_text))
         }
     }
 

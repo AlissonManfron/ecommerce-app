@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -60,16 +61,12 @@ fun LoginScreen(
     DisposableEffect(state) {
         when {
             state.isSuccessLogin -> {
-                Toast.makeText(context, "Logado com sucesso!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.login_success_message, Toast.LENGTH_SHORT).show()
                 navController.navigate(NavRoutes.HOME)
             }
 
             state.shouldShowDefaultError -> {
-                Toast.makeText(
-                    context,
-                    "Ops, ocorreu um erro, tente novamente!",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
             }
         }
         onDispose {
@@ -115,7 +112,9 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            placeholder = { Text(text = "Email") }
+            placeholder = {
+                Text(text = stringResource(id = R.string.email_field_hint))
+            }
         )
         OutlinedTextError(state.isEmailError)
 
@@ -138,7 +137,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            placeholder = { Text(text = "Password") }
+            placeholder = { Text(text = stringResource(id = R.string.password_field_hint)) }
         )
         OutlinedTextError(state.isPasswordError)
 
@@ -150,7 +149,7 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .height(48.dp)
         ) {
-            Text(text = "Login")
+            Text(text = stringResource(id = R.string.login_login_button_text))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -158,7 +157,7 @@ fun LoginScreen(
         TextButton(
             onClick = { onButtonCreateAccountClick() }
         ) {
-            Text(text = "Crie sua conta aqui")
+            Text(text = stringResource(id = R.string.login_create_account_button_text))
         }
     }
 
