@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
@@ -62,7 +63,12 @@ fun LoginScreen(
         when {
             state.isSuccessLogin -> {
                 Toast.makeText(context, R.string.login_success_message, Toast.LENGTH_SHORT).show()
-                navController.navigate(NavRoutes.HOME)
+                navController.navigate(
+                    NavRoutes.HOME,
+                    navOptions = NavOptions.Builder()
+                        .setPopUpTo(NavRoutes.LOGIN, true)
+                        .build()
+                )
             }
 
             state.shouldShowDefaultError -> {

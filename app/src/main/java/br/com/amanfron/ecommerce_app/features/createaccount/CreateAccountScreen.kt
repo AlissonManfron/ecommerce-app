@@ -21,10 +21,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.features.createaccount.CreateAccountViewModel.CreateAccountViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
+import br.com.amanfron.ecommerce_app.utils.NavRoutes
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -51,7 +53,12 @@ fun CreateAccountScreen(
                 Toast.makeText(
                     context, R.string.create_account_success_message, Toast.LENGTH_SHORT
                 ).show()
-                navController.popBackStack()
+                navController.navigate(
+                    NavRoutes.HOME,
+                    navOptions = NavOptions.Builder()
+                        .setPopUpTo(NavRoutes.LOGIN, true)
+                        .build()
+                )
             }
 
             state.shouldShowDefaultError -> {

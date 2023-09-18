@@ -1,9 +1,11 @@
 package br.com.amanfron.ecommerce_app.di
 
+import br.com.amanfron.ecommerce_app.core.interceptor.AuthorizationInterceptor
 import br.com.amanfron.ecommerce_app.core.model.UserService
 import br.com.amanfron.ecommerce_app.core.network.ResponseHandler
 import br.com.amanfron.ecommerce_app.core.network.ResponseHandlerImpl
 import br.com.amanfron.ecommerce_app.core.repository.AuthRepository
+import br.com.amanfron.ecommerce_app.core.repository.UserRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -26,9 +28,12 @@ object AppModule {
         .build()
 
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        userRepository: UserRepository
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(40, TimeUnit.SECONDS)
+            .addInterceptor(AuthorizationInterceptor(userRepository))
             .build()
     }
 
