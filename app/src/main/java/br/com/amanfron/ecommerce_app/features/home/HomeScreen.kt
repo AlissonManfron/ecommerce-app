@@ -17,7 +17,8 @@ import androidx.navigation.NavHostController
 @Composable
 fun HomeScreen(
     keyboardController: SoftwareKeyboardController?,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: HomeViewModel
 ) {
     Column(
         modifier = Modifier

@@ -4,7 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.amanfron.ecommerce_app.core.model.RegisterResponse
+import br.com.amanfron.ecommerce_app.core.model.response.user.RegisterResponse
 import br.com.amanfron.ecommerce_app.core.repository.AuthRepository
 import br.com.amanfron.ecommerce_app.core.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,10 +1,10 @@
-package br.com.amanfron.ecommerce_app.core.model
+package br.com.amanfron.ecommerce_app.core.model.response.user
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class RegisterResponse(
+data class LoginResponse(
     @Json(name = "name")
     val name: String,
 

@@ -1,10 +1,11 @@
 package br.com.amanfron.ecommerce_app.di
 
 import br.com.amanfron.ecommerce_app.core.interceptor.AuthorizationInterceptor
-import br.com.amanfron.ecommerce_app.core.model.UserService
+import br.com.amanfron.ecommerce_app.core.model.AppService
 import br.com.amanfron.ecommerce_app.core.network.ResponseHandler
 import br.com.amanfron.ecommerce_app.core.network.ResponseHandlerImpl
 import br.com.amanfron.ecommerce_app.core.repository.AuthRepository
+import br.com.amanfron.ecommerce_app.core.repository.ProductRepository
 import br.com.amanfron.ecommerce_app.core.repository.UserRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -16,6 +17,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -47,8 +49,8 @@ object AppModule {
     }
 
     @Provides
-    fun provideUserService(retrofit: Retrofit): UserService {
-        return retrofit.create(UserService::class.java)
+    fun provideUserService(retrofit: Retrofit): AppService {
+        return retrofit.create(AppService::class.java)
     }
 
     @Provides
@@ -58,9 +60,23 @@ object AppModule {
 
     @Provides
     fun provideAuthRepository(
-        userService: UserService,
+        service: AppService,
         responseHandler: ResponseHandler
     ): AuthRepository {
-        return AuthRepository(userService, responseHandler)
+        return AuthRepository(service, responseHandler)
+    }
+
+    @Provides
+    fun provideProductRepository(
+        service: AppService,
+        responseHandler: ResponseHandler
+    ): ProductRepository {
+        return ProductRepository(service, responseHandler)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(): UserRepository {
+        return UserRepository()
     }
 }
