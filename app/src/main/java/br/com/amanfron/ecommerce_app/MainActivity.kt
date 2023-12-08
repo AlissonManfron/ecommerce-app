@@ -50,7 +50,6 @@ class MainActivity : ComponentActivity() {
                     composable(NavRoutes.HOME) {
                         val viewModel: HomeViewModel by viewModels()
                         HomeScreen(
-                            keyboardController,
                             navController,
                             viewModel
                         )

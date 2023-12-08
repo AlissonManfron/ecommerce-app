@@ -17,6 +17,6 @@ interface AppService {
     @POST("api/auth/register")
     suspend fun doRegister(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
 
-    @GET("api/products/search/rankeds")
-    suspend fun getProductsRankeds(): Response<ProductResponse>
+    @GET("api/products/rankeds")
+    suspend fun getRankedProducts(): Response<ProductResponse>
 }

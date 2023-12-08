@@ -10,9 +10,9 @@ class ProductRepository @Inject constructor(
     private val service: AppService,
     private val responseHandler: ResponseHandler
 ) {
-    fun getProductsRankeds(): Flow<ProductResponse> {
+    fun getRankedProducts(): Flow<ProductResponse> {
         return responseHandler.handleResponseFlow {
-            service.getProductsRankeds()
+            service.getRankedProducts()
         }
     }
 }

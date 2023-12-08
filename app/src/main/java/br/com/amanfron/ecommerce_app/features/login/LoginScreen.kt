@@ -62,6 +62,7 @@ fun LoginScreen(
     DisposableEffect(state) {
         when {
             state.isSuccessLogin -> {
+                state.isSuccessLogin = false
                 Toast.makeText(context, R.string.login_success_message, Toast.LENGTH_SHORT).show()
                 navController.navigate(
                     NavRoutes.HOME,
@@ -72,6 +73,7 @@ fun LoginScreen(
             }
 
             state.shouldShowDefaultError -> {
+                state.shouldShowDefaultError = false
                 Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
             }
         }
