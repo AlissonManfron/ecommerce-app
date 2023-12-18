@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -27,7 +26,7 @@ fun LoadingView(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White.copy(alpha = 0.8f)),
+            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.9f)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -35,12 +34,11 @@ fun LoadingView(
             modifier = Modifier
                 .size(100.dp)
                 .clip(shape = RoundedCornerShape(16.dp))
-                .background(Color.LightGray),
+                .background(MaterialTheme.colorScheme.surface),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             CircularProgressIndicator(
-                color = Color.Blue,
                 modifier = Modifier.size(50.dp)
             )
             Spacer(modifier = Modifier.height(4.dp))
