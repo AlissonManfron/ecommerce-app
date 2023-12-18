@@ -37,7 +37,7 @@ import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
-import br.com.amanfron.ecommerce_app.ui.theme.EcommerceappTheme
+import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import br.com.amanfron.ecommerce_app.utils.NavRoutes
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -177,15 +177,13 @@ fun LoginScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
-    EcommerceappTheme {
-        LoginScreen(
-            LoginViewState(),
-            null,
-            onEmailChanged = {},
-            onPasswordChanged = {},
-            onButtonLoginClick = {},
-            onButtonCreateAccountClick = {}
-        )
-    }
+fun LoginScreenPreview() = EcommerceAppTheme {
+    LoginScreen(
+        LoginViewState(),
+        null,
+        onEmailChanged = {},
+        onPasswordChanged = {},
+        onButtonLoginClick = {},
+        onButtonCreateAccountClick = {}
+    )
 }

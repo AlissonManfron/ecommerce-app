@@ -27,7 +27,7 @@ fun LoadingView(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0x00000000)),
+            .background(Color.White.copy(alpha = 0.8f)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

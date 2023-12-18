@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -74,6 +75,9 @@ dependencies {
 
     //Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("com.android.support:multidex:1.0.3")
     implementation("androidx.navigation:navigation-compose:2.5.3")

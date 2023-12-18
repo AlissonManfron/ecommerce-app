@@ -1,10 +1,11 @@
 package br.com.amanfron.ecommerce_app.features.home
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -17,10 +18,11 @@ import androidx.navigation.NavHostController
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.core.model.response.product.RankedProductResponse
+import br.com.amanfron.ecommerce_app.core.model.response.product.fromJson
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeViewState
+import br.com.amanfron.ecommerce_app.ui.customviews.BottomNavigationBar
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.ProductSectionView
-import br.com.amanfron.ecommerce_app.ui.theme.LightGray
 
 @Composable
 fun HomeScreen(
@@ -30,14 +32,18 @@ fun HomeScreen(
     val context = LocalContext.current
     val state = viewModel.state.value
 
-    HomeScreen(state,
-        onSeeMoreClick = { category ->
-            Toast.makeText(context, category, Toast.LENGTH_SHORT).show()
-        },
-        onProductClick = { productId ->
-            Toast.makeText(context, productId.toString(), Toast.LENGTH_SHORT).show()
-        }
-    )
+    BottomNavigationBar(navController = navController) {
+        HomeScreen(
+            it,
+            state,
+            onSeeMoreClick = { category ->
+                Toast.makeText(context, category, Toast.LENGTH_SHORT).show()
+            },
+            onProductClick = { product ->
+                navController.navigate("product_detail/${product.fromJson()}")
+            }
+        )
+    }
 
     DisposableEffect(state) {
         when {
@@ -54,15 +60,16 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreen(
+    paddingValues: PaddingValues,
     state: HomeViewState,
     onSeeMoreClick: (categoryName: String) -> Unit,
-    onProductClick: (productId: Int) -> Unit
+    onProductClick: (product: Product) -> Unit
 ) {
 
     Column(
         modifier = Modifier
+            .padding(paddingValues)
             .fillMaxSize()
-            .background(LightGray)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -86,6 +93,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
+        paddingValues = PaddingValues(),
         state = HomeViewState(
             shouldShowLoading = false,
             shouldShowDefaultError = false,
