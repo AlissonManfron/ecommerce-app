@@ -1,6 +1,7 @@
 package br.com.amanfron.ecommerce_app.core.repository
 
 import br.com.amanfron.ecommerce_app.core.model.AppService
+import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.core.network.ResponseHandler
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +14,12 @@ class ProductRepository @Inject constructor(
     fun getRankedProducts(): Flow<ProductResponse> {
         return responseHandler.handleResponseFlow {
             service.getRankedProducts()
+        }
+    }
+
+    fun getProductDetail(productId: Int): Flow<Product> {
+        return responseHandler.handleResponseFlow {
+            service.getProductDetail(productId)
         }
     }
 }
