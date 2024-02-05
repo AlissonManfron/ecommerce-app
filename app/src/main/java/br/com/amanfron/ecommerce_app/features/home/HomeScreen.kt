@@ -20,7 +20,7 @@ import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.core.model.response.product.RankedProductResponse
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.BottomNavigationBar
-import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
+import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
 import br.com.amanfron.ecommerce_app.ui.customviews.ProductSectionView
 
 @Composable
@@ -64,27 +64,24 @@ fun HomeScreen(
     onSeeMoreClick: (categoryName: String) -> Unit,
     onProductClick: (product: Product) -> Unit
 ) {
-
-    Column(
-        modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-    ) {
-        state.rankedProductList.forEach {
-            ProductSectionView(
-                categoryName = it.categoryName,
-                productList = it.products,
-                onSeeMoreClick = onSeeMoreClick,
-                onProductClick = onProductClick
-            )
+    LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+        ) {
+            state.rankedProductList.forEach {
+                ProductSectionView(
+                    categoryName = it.categoryName,
+                    productList = it.products,
+                    onSeeMoreClick = onSeeMoreClick,
+                    onProductClick = onProductClick
+                )
+            }
         }
-    }
-
-    if (state.shouldShowLoading) {
-        LoadingView()
     }
 }
 
