@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,15 +44,12 @@ fun HomeScreen(
         )
     }
 
-    DisposableEffect(state) {
+    LaunchedEffect(state) {
         when {
             state.shouldShowDefaultError -> {
                 state.shouldShowDefaultError = false
                 Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
             }
-        }
-        onDispose {
-            state.shouldShowDefaultError = false
         }
     }
 }

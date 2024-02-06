@@ -18,7 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -59,7 +59,7 @@ fun LoginScreen(
         onButtonCreateAccountClick = { navController.navigate(NavRoutes.CREATE_ACCOUNT) }
     )
 
-    DisposableEffect(state) {
+    LaunchedEffect(state) {
         when {
             state.isSuccessLogin -> {
                 state.isSuccessLogin = false
@@ -76,10 +76,6 @@ fun LoginScreen(
                 state.shouldShowDefaultError = false
                 Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
             }
-        }
-        onDispose {
-            state.isSuccessLogin = false
-            state.shouldShowDefaultError = false
         }
     }
 }

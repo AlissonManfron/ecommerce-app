@@ -19,7 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -48,15 +48,12 @@ fun ProductDetailScreen(
         ProductDetailScreen(paddingValues, state)
     }
 
-    DisposableEffect(state) {
+    LaunchedEffect(state) {
         when {
             state.shouldShowDefaultError -> {
                 state.shouldShowDefaultError = false
                 Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
             }
-        }
-        onDispose {
-            state.shouldShowDefaultError = false
         }
     }
 }
