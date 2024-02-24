@@ -1,6 +1,7 @@
 package br.com.amanfron.ecommerce_app.features.home
 
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,8 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
-import br.com.amanfron.ecommerce_app.core.model.response.product.RankedProductResponse
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeViewState
+import br.com.amanfron.ecommerce_app.ui.customviews.BannerProductSectionView
 import br.com.amanfron.ecommerce_app.ui.customviews.BottomNavigationBar
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
 import br.com.amanfron.ecommerce_app.ui.customviews.ProductSectionView
@@ -54,6 +56,7 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     paddingValues: PaddingValues,
@@ -70,14 +73,15 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
-            state.rankedProductList.forEach {
-                ProductSectionView(
-                    categoryName = it.categoryName,
-                    productList = it.products,
-                    onSeeMoreClick = onSeeMoreClick,
-                    onProductClick = onProductClick
-                )
-            }
+            BannerProductSectionView(
+                productList = state.bannerProductList,
+                onProductClick = onProductClick
+            )
+            ProductSectionView(
+                rankedProductList = state.rankedProductList,
+                onSeeMoreClick = onSeeMoreClick,
+                onProductClick = onProductClick
+            )
         }
     }
 }
@@ -91,7 +95,7 @@ fun HomeScreenPreview() {
             shouldShowLoading = false,
             shouldShowDefaultError = false,
             rankedProductList = listOf(
-                RankedProductResponse(
+                ProductCategoryResponse(
                     "", listOf(
                         Product(
                             0,

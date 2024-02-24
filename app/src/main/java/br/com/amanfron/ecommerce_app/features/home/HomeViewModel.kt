@@ -4,8 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
-import br.com.amanfron.ecommerce_app.core.model.response.product.RankedProductResponse
 import br.com.amanfron.ecommerce_app.core.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
@@ -34,6 +35,7 @@ class HomeViewModel @Inject constructor(
 
     private fun onGetProductsSuccess(response: ProductResponse) {
         _state.value = state.value.copy(
+            bannerProductList = response.bannerProductList,
             rankedProductList = response.rankedProductList
         )
     }
@@ -53,6 +55,7 @@ class HomeViewModel @Inject constructor(
     data class HomeViewState(
         var shouldShowLoading: Boolean = false,
         var shouldShowDefaultError: Boolean = false,
-        val rankedProductList: List<RankedProductResponse> = emptyList()
+        val bannerProductList: List<Product> = emptyList(),
+        val rankedProductList: List<ProductCategoryResponse> = emptyList()
     )
 }

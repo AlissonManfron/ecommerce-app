@@ -18,8 +18,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import br.com.amanfron.ecommerce_app.ui.theme.Typography
+
+@Composable
+fun ProductSectionView(
+    modifier: Modifier = Modifier,
+    rankedProductList: List<ProductCategoryResponse>,
+    onSeeMoreClick: (categoryName: String) -> Unit,
+    onProductClick: (product: Product) -> Unit
+) {
+    rankedProductList.forEach {
+        ProductSectionView(
+            modifier = modifier,
+            categoryName = it.categoryName,
+            productList = it.products,
+            onSeeMoreClick = onSeeMoreClick,
+            onProductClick = onProductClick
+        )
+    }
+}
 
 @Composable
 fun ProductSectionView(
