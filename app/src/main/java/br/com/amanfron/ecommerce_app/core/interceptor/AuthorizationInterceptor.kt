@@ -3,8 +3,9 @@ package br.com.amanfron.ecommerce_app.core.interceptor
 import br.com.amanfron.ecommerce_app.core.repository.UserRepository
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
-class AuthorizationInterceptor(
+class AuthorizationInterceptor @Inject constructor(
     private val userRepository: UserRepository
 ) : Interceptor {
 

@@ -32,6 +32,7 @@ object AppModule {
         .build()
 
     @Provides
+    @Singleton
     fun provideOkHttpClient(
         userRepository: UserRepository
     ): OkHttpClient {
@@ -45,6 +46,7 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -54,16 +56,19 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideUserService(retrofit: Retrofit): AppService {
         return retrofit.create(AppService::class.java)
     }
 
     @Provides
+    @Singleton
     fun provideResponseHandler(): ResponseHandler {
         return ResponseHandlerImpl()
     }
 
     @Provides
+    @Singleton
     fun provideAuthRepository(
         service: AppService,
         responseHandler: ResponseHandler
@@ -72,6 +77,7 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideProductRepository(
         service: AppService,
         responseHandler: ResponseHandler
