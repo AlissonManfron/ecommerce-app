@@ -82,7 +82,7 @@ fun LoginScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun LoginScreen(
+private fun LoginScreen(
     state: LoginViewState,
     keyboardController: SoftwareKeyboardController?,
     onEmailChanged: (email: String) -> Unit,

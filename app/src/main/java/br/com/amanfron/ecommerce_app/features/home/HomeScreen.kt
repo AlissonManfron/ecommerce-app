@@ -58,7 +58,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(
+private fun HomeScreen(
     paddingValues: PaddingValues,
     state: HomeViewState,
     onSeeMoreClick: (categoryName: String) -> Unit,

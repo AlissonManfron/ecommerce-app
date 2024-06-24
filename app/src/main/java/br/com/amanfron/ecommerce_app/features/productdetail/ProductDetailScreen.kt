@@ -59,7 +59,7 @@ fun ProductDetailScreen(
 }
 
 @Composable
-fun ProductDetailScreen(
+private fun ProductDetailScreen(
     paddingValues: PaddingValues,
     state: ProductDetailViewState
 ) {

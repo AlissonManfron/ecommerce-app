@@ -60,11 +60,7 @@ class MainActivity : ComponentActivity() {
 
                         composable(
                             NavRoutes.PRODUCT_DETAIL,
-                            arguments = listOf(
-                                navArgument("productId") {
-                                    type = NavType.IntType
-                                }
-                            )
+                            getProductIdArgument()
                         ) {
                             ProductDetailScreen(
                                 navController,
@@ -76,4 +72,10 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun getProductIdArgument() = listOf(
+        navArgument("productId") {
+            type = NavType.IntType
+        }
+    )
 }
