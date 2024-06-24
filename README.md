@@ -1,25 +1,25 @@
 # Ecommerce App
 
-> ## Descrição
+> ## Description
 >
-> - Aplicativo de ecommerce para realizar compras de produtos.
+> - Ecommerce application for purchasing products.
 > 
 <br/>
 
 > ## Status
-> Em desenvolvimento..
+> In development...
 <br/>
 
-> ## Tecnologias
+> ## Technologies
 >
-> - linguagem: Kotlin
-> - padrão de arquitetura: MVVM
-> - chamadas assíncronas: Coroutines
-> - Estrutura de UI: Jetpack Compose
+> - Language: Kotlin
+> - Architecture pattern: MVVM
+> - Asynchronous calls: Coroutines
+> - UI framework: Jetpack Compose
 > 
 <br/>
 
-> ## Imagens
+> ## Screenshots
 >
 > 
 > ### Light Mode
