@@ -43,8 +43,8 @@ import br.com.amanfron.ecommerce_app.utils.NavRoutes
 @Composable
 fun CreateAccountScreen(
     keyboardController: SoftwareKeyboardController?,
-    viewModel: CreateAccountViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: CreateAccountViewModel
 ) {
     val context = LocalContext.current
     val state = viewModel.state.value
