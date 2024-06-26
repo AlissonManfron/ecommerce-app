@@ -18,6 +18,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -41,8 +42,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun BannerProductSectionView(
     modifier: Modifier = Modifier,
-    pagerState: PagerState = rememberPagerState(),
     productList: List<Product>,
+    pagerState: PagerState = rememberPagerState { productList.size },
     onProductClick: (product: Product) -> Unit
 ) {
     val totalPages = productList.size
@@ -54,7 +55,13 @@ fun BannerProductSectionView(
         }
     }
 
-    BannerProductSectionView(modifier, totalPages, productList, pagerState, onProductClick)
+    BannerProductSectionView(
+        modifier,
+        CardDefaults.cardColors(),
+        productList,
+        pagerState,
+        onProductClick
+    )
     PageIndicator(totalPages, pagerState.currentPage)
 }
 
@@ -62,7 +69,7 @@ fun BannerProductSectionView(
 @Composable
 fun BannerProductSectionView(
     modifier: Modifier = Modifier,
-    totalPages: Int,
+    cardColors: CardColors,
     productList: List<Product>,
     pagerState: PagerState,
     onProductClick: (product: Product) -> Unit
@@ -71,11 +78,11 @@ fun BannerProductSectionView(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
+        colors = cardColors,
         elevation = CardDefaults.elevatedCardElevation(8.dp),
         shape = RoundedCornerShape(16.dp)
     ) {
         HorizontalPager(
-            pageCount = totalPages,
             state = pagerState,
             modifier = Modifier
                 .fillMaxSize()
