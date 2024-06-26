@@ -40,7 +40,6 @@ import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import br.com.amanfron.ecommerce_app.utils.NavRoutes
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     keyboardController: SoftwareKeyboardController?,
@@ -170,7 +169,6 @@ private fun LoginScreen(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() = EcommerceAppTheme {
