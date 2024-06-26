@@ -39,7 +39,6 @@ import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
 import br.com.amanfron.ecommerce_app.utils.NavRoutes
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreateAccountScreen(
     keyboardController: SoftwareKeyboardController?,
@@ -178,7 +177,6 @@ private fun CreateAccountScreen(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewCreateAccountScreen() {
