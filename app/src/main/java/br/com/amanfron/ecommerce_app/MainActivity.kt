@@ -8,7 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.compose.rememberNavController
-import br.com.amanfron.ecommerce_app.ui.navigation.EcommerceAppNavHost
+import br.com.amanfron.ecommerce_app.navigation.EcommerceAppNavHost
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 

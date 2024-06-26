@@ -1,4 +1,4 @@
-package br.com.amanfron.ecommerce_app.utils
+package br.com.amanfron.ecommerce_app.navigation
 
 object NavRoutes {
     const val LOGIN = "login"

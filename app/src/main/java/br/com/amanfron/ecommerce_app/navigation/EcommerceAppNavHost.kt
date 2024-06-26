@@ -1,4 +1,4 @@
-package br.com.amanfron.ecommerce_app.ui.navigation
+package br.com.amanfron.ecommerce_app.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.SoftwareKeyboardController
@@ -12,7 +12,6 @@ import br.com.amanfron.ecommerce_app.features.createaccount.CreateAccountScreen
 import br.com.amanfron.ecommerce_app.features.home.HomeScreen
 import br.com.amanfron.ecommerce_app.features.login.LoginScreen
 import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailScreen
-import br.com.amanfron.ecommerce_app.utils.NavRoutes
 
 @Composable
 fun EcommerceAppNavHost(

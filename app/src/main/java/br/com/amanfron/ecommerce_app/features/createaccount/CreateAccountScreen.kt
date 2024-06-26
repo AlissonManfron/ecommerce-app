@@ -35,9 +35,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.features.createaccount.CreateAccountViewModel.CreateAccountViewState
+import br.com.amanfron.ecommerce_app.navigation.NavRoutes
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
-import br.com.amanfron.ecommerce_app.utils.NavRoutes
 
 @Composable
 fun CreateAccountScreen(
