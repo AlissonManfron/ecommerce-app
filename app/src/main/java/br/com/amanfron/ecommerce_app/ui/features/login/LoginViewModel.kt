@@ -1,4 +1,4 @@
-package br.com.amanfron.ecommerce_app.features.login
+package br.com.amanfron.ecommerce_app.ui.features.login
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -79,8 +79,8 @@ class LoginViewModel @Inject constructor(
     }
 
     data class LoginViewState(
-        var email: String = "",
-        var password: String = "",
+        var email: String = "a@a.com",
+        var password: String = "12345",
         var shouldShowLoading: Boolean = false,
         var shouldShowDefaultError: Boolean = false,
         var isEmailError: Boolean = false,

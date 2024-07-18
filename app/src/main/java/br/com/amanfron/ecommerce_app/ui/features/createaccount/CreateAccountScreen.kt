@@ -1,4 +1,4 @@
-package br.com.amanfron.ecommerce_app.features.createaccount
+package br.com.amanfron.ecommerce_app.ui.features.createaccount
 
 import android.annotation.SuppressLint
 import android.widget.Toast
@@ -32,10 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import br.com.amanfron.ecommerce_app.R
-import br.com.amanfron.ecommerce_app.features.createaccount.CreateAccountViewModel.CreateAccountViewState
 import br.com.amanfron.ecommerce_app.navigation.NavRoutes
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
+import br.com.amanfron.ecommerce_app.ui.features.createaccount.CreateAccountViewModel.CreateAccountViewState
 
 @Composable
 fun CreateAccountScreen(

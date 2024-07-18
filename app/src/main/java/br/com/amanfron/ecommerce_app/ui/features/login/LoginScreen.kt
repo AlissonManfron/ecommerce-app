@@ -1,4 +1,4 @@
-package br.com.amanfron.ecommerce_app.features.login
+package br.com.amanfron.ecommerce_app.ui.features.login
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -32,10 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import br.com.amanfron.ecommerce_app.R
-import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginViewState
 import br.com.amanfron.ecommerce_app.navigation.NavRoutes
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
+import br.com.amanfron.ecommerce_app.ui.features.login.LoginViewModel.LoginViewState
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 
 @Composable
