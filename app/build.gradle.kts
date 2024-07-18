@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -24,7 +27,25 @@ android {
     }
 
     buildTypes {
+        val properties = Properties()
+        if (rootProject.file("local.properties").exists()) {
+            properties.load(FileInputStream(rootProject.file("local.properties")))
+        }
+
+        debug {
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                properties.getProperty("BASE_URL", "")
+            )
+        }
+
         release {
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                properties.getProperty("BASE_URL", "")
+            )
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -41,6 +62,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"

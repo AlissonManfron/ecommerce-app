@@ -1,5 +1,6 @@
 package br.com.amanfron.ecommerce_app.di
 
+import br.com.amanfron.ecommerce_app.BuildConfig
 import br.com.amanfron.ecommerce_app.core.interceptor.AuthorizationInterceptor
 import br.com.amanfron.ecommerce_app.core.model.AppService
 import br.com.amanfron.ecommerce_app.core.network.ResponseHandler
@@ -25,8 +26,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val BASE_URL = "https://ecommerce-api-zn1k.onrender.com/"
-
     private val moshi: Moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
@@ -49,7 +48,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
