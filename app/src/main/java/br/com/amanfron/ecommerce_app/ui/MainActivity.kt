@@ -1,4 +1,4 @@
-package br.com.amanfron.ecommerce_app
+package br.com.amanfron.ecommerce_app.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
