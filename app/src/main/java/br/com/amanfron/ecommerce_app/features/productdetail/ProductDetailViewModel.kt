@@ -1,12 +1,11 @@
-package br.com.amanfron.ecommerce_app.ui.features.home
+package br.com.amanfron.ecommerce_app.features.productdetail
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.core.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
@@ -16,33 +15,37 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class ProductDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val repository: ProductRepository
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(HomeViewState())
-    val state: State<HomeViewState> = _state
+    private val productId: Int? = savedStateHandle["productId"]
+
+    private val _state = mutableStateOf(ProductDetailViewState())
+    val state: State<ProductDetailViewState> = _state
 
     init {
         viewModelScope.launch {
-            repository.getRankedProducts()
-                .catch { onGetProductsError() }
-                .onStart { shouldShowLoading(true) }
-                .onCompletion { shouldShowLoading(false) }
-                .collect(::onGetProductsSuccess)
+            productId?.let {
+                repository.getProductDetail(it)
+                    .catch { onGetProductDetailError() }
+                    .onStart { shouldShowLoading(true) }
+                    .onCompletion { shouldShowLoading(false) }
+                    .collect(::onGetProductDetailSuccess)
+            }
         }
     }
 
-    private fun onGetProductsSuccess(response: ProductResponse) {
+    private fun onGetProductDetailError() {
         _state.value = state.value.copy(
-            bannerProductList = response.bannerProductList,
-            rankedProductList = response.rankedProductList
+            shouldShowDefaultError = true
         )
     }
 
-    private fun onGetProductsError() {
+    private fun onGetProductDetailSuccess(product: Product) {
         _state.value = state.value.copy(
-            shouldShowDefaultError = true
+            product = product
         )
     }
 
@@ -52,10 +55,9 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    data class HomeViewState(
+    data class ProductDetailViewState(
         var shouldShowLoading: Boolean = false,
         var shouldShowDefaultError: Boolean = false,
-        val bannerProductList: List<Product> = emptyList(),
-        val rankedProductList: List<ProductCategoryResponse> = emptyList()
+        val product: Product? = null
     )
 }

@@ -1,4 +1,4 @@
-package br.com.amanfron.ecommerce_app.ui.features.productdetail
+package br.com.amanfron.ecommerce_app.features.productdetail
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -31,9 +31,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.BottomNavigationBar
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
-import br.com.amanfron.ecommerce_app.ui.features.productdetail.ProductDetailViewModel.ProductDetailViewState
 import coil.compose.AsyncImage
 
 @Composable

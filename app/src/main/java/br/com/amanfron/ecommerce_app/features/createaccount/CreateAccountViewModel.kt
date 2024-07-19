@@ -1,4 +1,4 @@
-package br.com.amanfron.ecommerce_app.ui.features.createaccount
+package br.com.amanfron.ecommerce_app.features.createaccount
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

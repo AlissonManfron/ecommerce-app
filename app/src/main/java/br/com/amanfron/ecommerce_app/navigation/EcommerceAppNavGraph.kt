@@ -8,13 +8,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import br.com.amanfron.ecommerce_app.ui.features.createaccount.CreateAccountScreen
-import br.com.amanfron.ecommerce_app.ui.features.home.HomeScreen
-import br.com.amanfron.ecommerce_app.ui.features.login.LoginScreen
-import br.com.amanfron.ecommerce_app.ui.features.productdetail.ProductDetailScreen
+import br.com.amanfron.ecommerce_app.features.createaccount.CreateAccountScreen
+import br.com.amanfron.ecommerce_app.features.home.HomeScreen
+import br.com.amanfron.ecommerce_app.features.login.LoginScreen
+import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailScreen
 
 @Composable
-fun EcommerceAppNavHost(
+fun EcommerceAppNavGraph(
     navController: NavHostController,
     keyboardController: SoftwareKeyboardController?
 ) = NavHost(navController = navController, startDestination = NavRoutes.LOGIN) {
