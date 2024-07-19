@@ -40,7 +40,7 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BannerProductSectionView(
+fun ProductSectionBannerView(
     modifier: Modifier = Modifier,
     productList: List<Product>,
     pagerState: PagerState = rememberPagerState { productList.size },
@@ -55,7 +55,7 @@ fun BannerProductSectionView(
         }
     }
 
-    BannerProductSectionView(
+    ProductSectionBannerView(
         modifier,
         CardDefaults.cardColors(),
         productList,
@@ -67,7 +67,7 @@ fun BannerProductSectionView(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BannerProductSectionView(
+fun ProductSectionBannerView(
     modifier: Modifier = Modifier,
     cardColors: CardColors,
     productList: List<Product>,
@@ -144,8 +144,8 @@ fun PageIndicator(totalPages: Int, currentPage: Int) {
 @OptIn(ExperimentalFoundationApi::class)
 @Preview(showBackground = true)
 @Composable
-fun BannerProductSectionViewPreview() = EcommerceAppTheme {
-    BannerProductSectionView(
+fun ProductSectionBannerViewPreview() = EcommerceAppTheme {
+    ProductSectionBannerView(
         productList = listOf(
             Product(
                 0,

@@ -20,9 +20,9 @@ import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeViewState
-import br.com.amanfron.ecommerce_app.ui.customviews.BannerProductSectionView
 import br.com.amanfron.ecommerce_app.ui.customviews.BottomNavigationBar
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
+import br.com.amanfron.ecommerce_app.ui.customviews.ProductSectionBannerView
 import br.com.amanfron.ecommerce_app.ui.customviews.ProductSectionView
 
 @Composable
@@ -73,7 +73,7 @@ private fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
-            BannerProductSectionView(
+            ProductSectionBannerView(
                 productList = state.bannerProductList,
                 onProductClick = onProductClick
             )
