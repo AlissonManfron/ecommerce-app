@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartScreen
 import br.com.amanfron.ecommerce_app.features.createaccount.CreateAccountScreen
 import br.com.amanfron.ecommerce_app.features.home.HomeScreen
 import br.com.amanfron.ecommerce_app.features.login.LoginScreen
@@ -32,6 +33,12 @@ fun EcommerceAppNavGraph(
 
     composable(NavRoutes.HOME) {
         HomeScreen(
+            navController, hiltViewModel()
+        )
+    }
+
+    composable(NavRoutes.SHOPPING_CART) {
+        ShoppingCartScreen(
             navController, hiltViewModel()
         )
     }
