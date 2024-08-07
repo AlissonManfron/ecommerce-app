@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import br.com.amanfron.ecommerce_app.R
@@ -42,7 +43,7 @@ import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 fun LoginScreen(
     keyboardController: SoftwareKeyboardController?,
     navController: NavController,
-    viewModel: LoginViewModel
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val state = viewModel.state.value

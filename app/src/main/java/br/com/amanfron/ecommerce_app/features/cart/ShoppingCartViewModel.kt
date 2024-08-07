@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,11 +15,10 @@ import javax.inject.Inject
 class ShoppingCartViewModel @Inject constructor() : ViewModel() {
 
     private val _state = MutableStateFlow(ShoppingCartViewState())
-    val state: StateFlow<ShoppingCartViewState> = _state
+    val state: StateFlow<ShoppingCartViewState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            shouldShowLoading(true)
             delay(2000)
             shouldShowLoading(false)
         }

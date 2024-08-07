@@ -2,7 +2,6 @@ package br.com.amanfron.ecommerce_app.features.productdetail
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,25 +27,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailViewState
-import br.com.amanfron.ecommerce_app.ui.customviews.BottomNavigationBar
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
 import coil.compose.AsyncImage
 
 @Composable
 fun ProductDetailScreen(
     navController: NavController,
-    viewModel: ProductDetailViewModel
+    viewModel: ProductDetailViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val state = viewModel.state.value
 
-    BottomNavigationBar(navController = navController) { paddingValues ->
-        ProductDetailScreen(paddingValues, state)
-    }
+    ProductDetailScreen(state)
 
     LaunchedEffect(state) {
         when {
@@ -60,7 +57,6 @@ fun ProductDetailScreen(
 
 @Composable
 private fun ProductDetailScreen(
-    paddingValues: PaddingValues,
     state: ProductDetailViewState
 ) {
     LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
@@ -68,8 +64,6 @@ private fun ProductDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding(),
                     start = 24.dp,
                     end = 24.dp
                 )
@@ -193,7 +187,6 @@ private fun ProductDetailScreen(
 @Composable
 fun ProductDetailScreenPreview() {
     ProductDetailScreen(
-        paddingValues = PaddingValues(),
         state = ProductDetailViewState(
             product = Product(
                 0,

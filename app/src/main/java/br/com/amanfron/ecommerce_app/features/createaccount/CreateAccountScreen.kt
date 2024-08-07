@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import br.com.amanfron.ecommerce_app.R
@@ -41,7 +42,7 @@ import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
 fun CreateAccountScreen(
     keyboardController: SoftwareKeyboardController?,
     navController: NavHostController,
-    viewModel: CreateAccountViewModel
+    viewModel: CreateAccountViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val state = viewModel.state.value
