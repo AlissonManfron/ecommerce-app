@@ -9,6 +9,8 @@ class ShoppingCartRepository @Inject constructor(
 ) {
     fun getProductItems() = shoppingCartDao.getAll()
 
+    fun getProductsCount() = shoppingCartDao.getProductsCount()
+
     suspend fun insertProductItem(productItem: ProductItem) = shoppingCartDao.insert(productItem)
 
     suspend fun deleteProductItem(productItem: ProductItem) = shoppingCartDao.delete(productItem)

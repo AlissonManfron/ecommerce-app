@@ -17,4 +17,8 @@ interface ShoppingCartDao {
 
     @Delete
     suspend fun delete(productItem: ProductItem)
+
+    @Query("SELECT COUNT(*) FROM products")
+    fun getProductsCount(): Flow<Int>
+
 }

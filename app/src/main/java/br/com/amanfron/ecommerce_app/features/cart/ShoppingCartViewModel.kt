@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
@@ -40,13 +41,32 @@ class ShoppingCartViewModel @Inject constructor(
 
     private fun onGetProductItemsSuccess(productsItems: List<ProductItem>) {
         _state.update { state ->
-            state.copy(products = productsItems.map { it.toProduct() })
+            state.copy(
+                products = productsItems.map { it.toProduct() },
+                cartItemCount = productsItems.size
+            )
         }
     }
 
     fun addProductToCart(product: Product) {
         viewModelScope.launch(ioDispatcher) {
             shoppingCartRepository.insertProductItem(product.toProductItem())
+        }
+    }
+
+    fun getProductsCount() {
+        viewModelScope.launch(ioDispatcher) {
+            shoppingCartRepository.getProductsCount()
+                .catch { }
+                .collect(::onGetProductsCountSuccess)
+        }
+    }
+
+    private fun onGetProductsCountSuccess(count: Int) {
+        _state.update { state ->
+            state.copy(
+                cartItemCount = count
+            )
         }
     }
 
@@ -58,6 +78,7 @@ class ShoppingCartViewModel @Inject constructor(
 
     data class ShoppingCartViewState(
         val products: List<Product> = emptyList(),
+        val cartItemCount: Int = 0,
         var shouldShowLoading: Boolean = false,
         var shouldShowDefaultError: Boolean = false
     )
