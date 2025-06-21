@@ -29,13 +29,13 @@ import coil.compose.AsyncImage
 fun ProductItem(
     modifier: Modifier = Modifier,
     product: Product,
-    onProductClick: (product: Product) -> Unit
+    onProductClick: (productId: Int) -> Unit
 ) {
     Card(
         modifier = modifier
             .width(120.dp)
             .height(180.dp)
-            .clickable { onProductClick.invoke(product) },
+            .clickable { onProductClick.invoke(product.id) },
         shape = MaterialTheme.shapes.medium,
         elevation =  CardDefaults.cardElevation(8.dp),
     ) {
@@ -83,13 +83,13 @@ fun ProductItem(
 fun ProductItemPreview() = EcommerceAppTheme {
     ProductItem(
         product = Product(
-            0,
-            "Title",
-            "Description",
-            "",
-            "20.0",
-            1,
-            ""
+            id = 0,
+            title = "Title",
+            description = "Description",
+            imageUrl = "",
+            price = "20.0",
+            categoryId = 1,
+            categoryName = ""
         ),
         onProductClick = {}
     )

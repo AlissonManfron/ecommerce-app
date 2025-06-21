@@ -27,7 +27,7 @@ fun ProductSectionView(
     modifier: Modifier = Modifier,
     rankedProductList: List<ProductCategoryResponse>,
     onSeeMoreClick: (categoryName: String) -> Unit,
-    onProductClick: (product: Product) -> Unit
+    onProductClick: (productId: Int) -> Unit
 ) {
     rankedProductList.forEach {
         ProductSectionView(
@@ -46,7 +46,7 @@ fun ProductSectionView(
     categoryName: String,
     productList: List<Product>,
     onSeeMoreClick: (categoryName: String) -> Unit,
-    onProductClick: (product: Product) -> Unit
+    onProductClick: (productId: Int) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -111,13 +111,13 @@ fun ProductSectionPreview() = EcommerceAppTheme {
         categoryName = "Teste",
         productList = listOf(
             Product(
-                0,
-                "Title",
-                "Description",
-                "",
-                "20.0",
-                1,
-                ""
+                id = 0,
+                title = "Title",
+                description = "Description",
+                imageUrl = "",
+                price = "20.0",
+                categoryId = 1,
+                categoryName = ""
             ),
         ),
         onSeeMoreClick = {},

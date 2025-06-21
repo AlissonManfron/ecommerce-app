@@ -6,6 +6,8 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCoroutinesCore = "1.9.0"
+lifecycleRuntimeCompose = "2.8.7"
 lifecycleRuntimeKtx = "2.8.2"
 hilt = "2.48"
 ksp = "1.9.10-1.0.13"
@@ -19,9 +21,11 @@ retrofit = "2.9.0"
 moshi_kotlin = "1.9.3"
 okhttp = "5.0.0-alpha.3"
 logging_interceptor = "4.9.1"
+room_version = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -32,6 +36,7 @@ hilt_android_compiler = { group = "com.google.dagger", name = "hilt-android-comp
 hilt-navigation-fragment = { group = "androidx.hilt", name = "hilt-navigation-fragment", version.ref = "hilt_compose" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt_compose" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 multidex = { group = "com.android.support", name = "multidex", version.ref = "multidex" }
 compose_bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose_bom" }
 compose_ui = { module = "androidx.compose.ui:ui" }
@@ -49,12 +54,13 @@ converter_moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", 
 moshi_kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi_kotlin" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 logging_interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging_interceptor" }
-
+room_runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room_version" }
+room_compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room_version" }
+room_ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room_version" }
 
 [bundles]
 compose = ["compose.ui", "compose.ui.graphics", "compose.material3", "compose.navigation", "compose.activity", "compose.ui.tooling", "compose.ui.tooling.preview"]
 compose-test = ["compose.uitest", "compose.junit4"]
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -62,3 +68,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin_parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+room = { id = "androidx.room", version.ref = "room_version" }

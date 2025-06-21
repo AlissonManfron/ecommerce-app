@@ -6,6 +6,7 @@ object NavRoutes {
     const val LOGIN = "login"
     const val HOME = "home"
     const val CREATE_ACCOUNT = "create_account"
-    const val PRODUCT_DETAIL = "product_detail/{$PRODUCT_ID_PARAM}"
+    const val PRODUCT_DETAIL = "product_detail"
+    const val PRODUCT_DETAIL_WITH_ID = "product_detail/{$PRODUCT_ID_PARAM}"
     const val SHOPPING_CART = "shopping_cart"
 }

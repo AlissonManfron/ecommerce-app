@@ -21,6 +21,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,21 +31,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.features.createaccount.CreateAccountViewModel.CreateAccountViewState
-import br.com.amanfron.ecommerce_app.navigation.NavRoutes
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
 
 @Composable
 fun CreateAccountScreen(
-    keyboardController: SoftwareKeyboardController?,
-    navController: NavHostController,
-    viewModel: CreateAccountViewModel = hiltViewModel()
+    viewModel: CreateAccountViewModel = hiltViewModel(),
+    navigateToHome: () -> Unit
 ) {
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val state = viewModel.state.value
 
     CreateAccountScreen(
@@ -62,12 +60,7 @@ fun CreateAccountScreen(
                 Toast.makeText(
                     context, R.string.create_account_success_message, Toast.LENGTH_SHORT
                 ).show()
-                navController.navigate(
-                    NavRoutes.HOME,
-                    navOptions = NavOptions.Builder()
-                        .setPopUpTo(NavRoutes.LOGIN, true)
-                        .build()
-                )
+                navigateToHome()
             }
 
             state.shouldShowDefaultError -> {
@@ -184,6 +177,6 @@ fun PreviewCreateAccountScreen() {
         onEmailChanged = {},
         onPasswordChanged = {},
         onButtonCreateAccountClick = {},
-        null
+        keyboardController = null
     )
 }

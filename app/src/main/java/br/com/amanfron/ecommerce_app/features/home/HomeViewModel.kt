@@ -1,7 +1,5 @@
 package br.com.amanfron.ecommerce_app.features.home
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
@@ -9,9 +7,12 @@ import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategory
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.core.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,8 +21,8 @@ class HomeViewModel @Inject constructor(
     private val repository: ProductRepository
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(HomeViewState())
-    val state: State<HomeViewState> = _state
+    private val _state = MutableStateFlow(HomeViewState())
+    val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -34,10 +35,12 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun onGetProductsSuccess(response: ProductResponse) {
-        _state.value = state.value.copy(
-            bannerProductList = response.bannerProductList,
-            rankedProductList = response.rankedProductList
-        )
+        _state.update {
+            it.copy(
+                bannerProductList = response.bannerProductList,
+                rankedProductList = response.rankedProductList
+            )
+        }
     }
 
     private fun onGetProductsError() {

@@ -1,11 +1,13 @@
 package br.com.amanfron.ecommerce_app.navigation
 
+import android.widget.Toast
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,34 +23,63 @@ import br.com.amanfron.ecommerce_app.ui.customviews.NavigationState
 @Composable
 fun EcommerceAppNavGraph(
     navController: NavHostController,
-    navigationState: NavigationState,
-    keyboardController: SoftwareKeyboardController?
+    navigationState: NavigationState
 ) = NavHost(navController = navController, startDestination = NavRoutes.LOGIN) {
+
     composable(NavRoutes.LOGIN) {
-        LoginScreen(keyboardController, navController)
+        LoginScreen(
+            navigateToHome = {
+                navController.navigate(
+                    NavRoutes.HOME,
+                    navOptions = NavOptions.Builder()
+                        .setPopUpTo(NavRoutes.LOGIN, true)
+                        .build()
+                )
+            },
+            navigateToCreateAccount = {
+                navController.navigate(NavRoutes.CREATE_ACCOUNT)
+            }
+        )
     }
 
     composable(NavRoutes.CREATE_ACCOUNT) {
-        CreateAccountScreen(keyboardController, navController)
+        CreateAccountScreen(
+            navigateToHome = {
+                navController.navigate(
+                    NavRoutes.HOME,
+                    navOptions = NavOptions.Builder()
+                        .setPopUpTo(NavRoutes.LOGIN, true)
+                        .build()
+                )
+            }
+        )
     }
 
     makeComposable(NavRoutes.HOME, navController, navigationState) {
-        HomeScreen(navController)
+        val context = LocalContext.current
+        HomeScreen(
+            navigateToSeeMore = { category ->
+                Toast.makeText(context, category, Toast.LENGTH_SHORT).show()
+            },
+            navigateToProductDetail = { productId ->
+                navController.navigate("${NavRoutes.PRODUCT_DETAIL}/$productId")
+            }
+        )
     }
 
     makeComposable(NavRoutes.SHOPPING_CART, navController, navigationState) {
-        ShoppingCartScreen(navController)
+        ShoppingCartScreen()
     }
 
     composable(
-        route = NavRoutes.PRODUCT_DETAIL,
+        route = NavRoutes.PRODUCT_DETAIL_WITH_ID,
         arguments = listOf(
             navArgument(NavRoutes.PRODUCT_ID_PARAM) {
                 type = NavType.IntType
             }
         )
     ) {
-        ProductDetailScreen(navController)
+        ProductDetailScreen()
     }
 }
 

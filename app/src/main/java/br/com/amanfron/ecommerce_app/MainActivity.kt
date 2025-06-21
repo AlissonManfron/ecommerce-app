@@ -26,8 +26,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     EcommerceAppNavGraph(
                         navController = rememberNavController(),
-                        navigationState = rememberNavigationState(),
-                        keyboardController = LocalSoftwareKeyboardController.current
+                        navigationState = rememberNavigationState()
                     )
                 }
             }

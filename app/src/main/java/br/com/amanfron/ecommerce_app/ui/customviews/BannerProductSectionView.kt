@@ -44,7 +44,7 @@ fun ProductSectionBannerView(
     modifier: Modifier = Modifier,
     productList: List<Product>,
     pagerState: PagerState = rememberPagerState { productList.size },
-    onProductClick: (product: Product) -> Unit
+    onProductClick: (productId: Int) -> Unit
 ) {
     val totalPages = productList.size
 
@@ -72,7 +72,7 @@ fun ProductSectionBannerView(
     cardColors: CardColors,
     productList: List<Product>,
     pagerState: PagerState,
-    onProductClick: (product: Product) -> Unit
+    onProductClick: (productId: Int) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -91,7 +91,7 @@ fun ProductSectionBannerView(
                 modifier =
                 Modifier
                     .fillMaxWidth()
-                    .clickable { onProductClick.invoke(productList[page]) },
+                    .clickable { onProductClick(productList[page].id) },
                 color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = RoundedCornerShape(16.dp)
             ) {

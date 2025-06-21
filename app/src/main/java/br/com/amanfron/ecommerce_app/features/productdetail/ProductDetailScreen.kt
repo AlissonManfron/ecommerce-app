@@ -19,6 +19,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -28,22 +29,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel
 import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
 import coil.compose.AsyncImage
 
 @Composable
 fun ProductDetailScreen(
-    navController: NavController,
-    viewModel: ProductDetailViewModel = hiltViewModel()
+    viewModel: ProductDetailViewModel = hiltViewModel(),
+    shoppingCartViewModel: ShoppingCartViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val state = viewModel.state.value
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    ProductDetailScreen(state)
+    ProductDetailScreen(
+        state,
+        onAddProductToCartClick = shoppingCartViewModel::addProductToCart
+    )
 
     LaunchedEffect(state) {
         when {
@@ -57,7 +62,8 @@ fun ProductDetailScreen(
 
 @Composable
 private fun ProductDetailScreen(
-    state: ProductDetailViewState
+    state: ProductDetailViewState,
+    onAddProductToCartClick: (product: Product) -> Unit
 ) {
     LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
         Column(
@@ -170,7 +176,11 @@ private fun ProductDetailScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedButton(
-                onClick = { },
+                onClick = {
+                    state.product?.let {
+                        onAddProductToCartClick(it)
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
@@ -189,14 +199,15 @@ fun ProductDetailScreenPreview() {
     ProductDetailScreen(
         state = ProductDetailViewState(
             product = Product(
-                0,
-                "Title",
-                "Description",
-                "",
-                "20.0",
-                1,
-                "Livros"
+                id = 0,
+                title = "Title",
+                description = "Description",
+                imageUrl = "",
+                price = "20.0",
+                categoryId = 1,
+                categoryName = "Livros"
             )
-        )
+        ),
+        onAddProductToCartClick = {}
     )
 }

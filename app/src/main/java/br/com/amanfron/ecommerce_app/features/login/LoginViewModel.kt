@@ -1,16 +1,18 @@
 package br.com.amanfron.ecommerce_app.features.login
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.amanfron.ecommerce_app.core.model.response.user.LoginResponse
 import br.com.amanfron.ecommerce_app.core.repository.AuthRepository
 import br.com.amanfron.ecommerce_app.core.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,28 +22,30 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(LoginViewState())
-    val state: State<LoginViewState> = _state
+    private val _state = MutableStateFlow(LoginViewState())
+    val state: StateFlow<LoginViewState> = _state.asStateFlow()
 
     fun setEmail(newEmail: String) {
-        _state.value = state.value.copy(
-            email = newEmail
-        )
+        _state.update {
+            it.copy(email = newEmail)
+        }
         checkFieldErrors()
     }
 
     fun setPassword(newPassword: String) {
-        _state.value = state.value.copy(
-            password = newPassword
-        )
+        _state.update {
+            it.copy(password = newPassword)
+        }
         checkFieldErrors()
     }
 
     private fun checkFieldErrors() {
-        _state.value = state.value.copy(
-            isEmailError = _state.value.email.isEmpty(),
-            isPasswordError = _state.value.password.isEmpty()
-        )
+        _state.update {
+            it.copy(
+                isEmailError = _state.value.email.isEmpty(),
+                isPasswordError = _state.value.password.isEmpty()
+            )
+        }
     }
 
     fun onButtonLoginClick() {
@@ -61,26 +65,26 @@ class LoginViewModel @Inject constructor(
 
     private fun onLoginSuccess(response: LoginResponse) {
         userRepository.setUser(response.name, response.email, response.token)
-        _state.value = state.value.copy(
-            isSuccessLogin = true
-        )
+        _state.update {
+            it.copy(isSuccessLogin = true)
+        }
     }
 
     private fun onLoginError() {
-        _state.value = state.value.copy(
-            shouldShowDefaultError = true
-        )
+        _state.update {
+            it.copy(shouldShowDefaultError = true)
+        }
     }
 
     private fun shouldShowLoading(should: Boolean) {
-        _state.value = state.value.copy(
-            shouldShowLoading = should
-        )
+        _state.update {
+            it.copy(shouldShowLoading = should)
+        }
     }
 
     data class LoginViewState(
-        var email: String = "",
-        var password: String = "",
+        var email: String = "a@a.com",
+        var password: String = "12345",
         var shouldShowLoading: Boolean = false,
         var shouldShowDefaultError: Boolean = false,
         var isEmailError: Boolean = false,
