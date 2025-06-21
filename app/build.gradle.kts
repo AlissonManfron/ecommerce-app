@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.room)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -91,6 +92,8 @@ dependencies {
     // Compose
     implementation(libs.bundles.compose)
     implementation(platform(libs.compose.bom))
+    implementation(libs.jetbrains.kotlinx.serialization.json)
+    implementation(libs.androidx.navigation.compose.v280beta01)
 
     // Retrofit
     implementation(libs.retrofit)

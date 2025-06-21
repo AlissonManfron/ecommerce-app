@@ -40,6 +40,7 @@ import coil.compose.AsyncImage
 @Composable
 fun ProductDetailScreen(
     viewModel: ProductDetailViewModel = hiltViewModel(),
+    productId: Int,
     shoppingCartViewModel: ShoppingCartViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -49,6 +50,10 @@ fun ProductDetailScreen(
         state,
         onAddProductToCartClick = shoppingCartViewModel::addProductToCart
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.getProduct(productId)
+    }
 
     LaunchedEffect(state) {
         when {

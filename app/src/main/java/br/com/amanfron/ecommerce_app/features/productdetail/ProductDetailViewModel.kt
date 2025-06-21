@@ -1,11 +1,9 @@
 package br.com.amanfron.ecommerce_app.features.productdetail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.core.repository.ProductRepository
-import br.com.amanfron.ecommerce_app.navigation.NavRoutes.PRODUCT_ID_PARAM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,24 +17,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val repository: ProductRepository
 ) : ViewModel() {
-
-    private val productId: Int? = savedStateHandle[PRODUCT_ID_PARAM]
 
     private val _state = MutableStateFlow(ProductDetailViewState())
     val state: StateFlow<ProductDetailViewState> = _state.asStateFlow()
 
-    init {
+    fun getProduct(productId: Int) {
         viewModelScope.launch {
-            productId?.let {
-                repository.getProductDetail(it)
-                    .catch { onGetProductDetailError() }
-                    .onStart { shouldShowLoading(true) }
-                    .onCompletion { shouldShowLoading(false) }
-                    .collect(::onGetProductDetailSuccess)
-            }
+            repository.getProductDetail(productId)
+                .catch { onGetProductDetailError() }
+                .onStart { shouldShowLoading(true) }
+                .onCompletion { shouldShowLoading(false) }
+                .collect(::onGetProductDetailSuccess)
         }
     }
 

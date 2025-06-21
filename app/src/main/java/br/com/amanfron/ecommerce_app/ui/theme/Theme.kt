@@ -1,5 +1,7 @@
 package br.com.amanfron.ecommerce_app.ui.theme
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -36,6 +38,7 @@ private val LightColorScheme = lightColorScheme(
     onError = Color(0xFFFFFFFF),
 )
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun EcommerceAppTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
