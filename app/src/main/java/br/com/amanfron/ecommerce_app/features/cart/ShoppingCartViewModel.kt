@@ -2,25 +2,51 @@ package br.com.amanfron.ecommerce_app.features.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.amanfron.ecommerce_app.core.local.ProductItem
+import br.com.amanfron.ecommerce_app.core.local.toProduct
+import br.com.amanfron.ecommerce_app.core.local.toProductItem
+import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.repository.ShoppingCartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShoppingCartViewModel @Inject constructor() : ViewModel() {
+class ShoppingCartViewModel @Inject constructor(
+    private val ioDispatcher: CoroutineDispatcher,
+    private val shoppingCartRepository: ShoppingCartRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(ShoppingCartViewState())
     val state: StateFlow<ShoppingCartViewState> = _state.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            delay(2000)
-            shouldShowLoading(false)
+        viewModelScope.launch(ioDispatcher) {
+            shoppingCartRepository.getProductItems()
+                .take(1)
+                .onStart { shouldShowLoading(true) }
+                .onCompletion { shouldShowLoading(false) }
+                .collect(::onGetProductItemsSuccess)
+        }
+    }
+
+    private fun onGetProductItemsSuccess(productsItems: List<ProductItem>) {
+        _state.update { state ->
+            state.copy(products = productsItems.map { it.toProduct() })
+        }
+    }
+
+    fun addProductToCart(product: Product) {
+        viewModelScope.launch(ioDispatcher) {
+            shoppingCartRepository.insertProductItem(product.toProductItem())
         }
     }
 
@@ -31,7 +57,8 @@ class ShoppingCartViewModel @Inject constructor() : ViewModel() {
     }
 
     data class ShoppingCartViewState(
-        var shouldShowLoading: Boolean = true,
+        val products: List<Product> = emptyList(),
+        var shouldShowLoading: Boolean = false,
         var shouldShowDefaultError: Boolean = false
     )
 }
