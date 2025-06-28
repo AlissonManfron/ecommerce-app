@@ -18,12 +18,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -31,8 +31,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
@@ -41,42 +39,44 @@ import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
+    uiState: LoginViewState,
     navigateToCreateAccount: () -> Unit,
-    navigateToHome: () -> Unit
+    navigateToHome: () -> Unit,
+    onEmailChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    onLoginButtonClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(state) {
+    LaunchedEffect(uiState) {
         when {
-            state.isSuccessLogin -> {
-                state.isSuccessLogin = false
+            uiState.isSuccessLogin -> {
+                uiState.isSuccessLogin = false
                 Toast.makeText(context, R.string.login_success_message, Toast.LENGTH_SHORT).show()
                 navigateToHome()
             }
 
-            state.shouldShowDefaultError -> {
-                state.shouldShowDefaultError = false
+            uiState.shouldShowDefaultError -> {
+                uiState.shouldShowDefaultError = false
                 Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     LoginScreen(
-        state,
+        uiState,
         keyboardController,
-        onEmailChanged = viewModel::setEmail,
-        onPasswordChanged = viewModel::setPassword,
-        onLoginButtonClick = viewModel::onButtonLoginClick,
+        onEmailChanged = onEmailChanged,
+        onPasswordChanged = onPasswordChanged,
+        onLoginButtonClick = onLoginButtonClick,
         onCreateAccountButtonClick = navigateToCreateAccount
     )
 }
 
 @Composable
 private fun LoginScreen(
-    state: LoginViewState,
+    uiState: LoginViewState,
     keyboardController: SoftwareKeyboardController?,
     onEmailChanged: (email: String) -> Unit,
     onPasswordChanged: (password: String) -> Unit,
@@ -100,7 +100,7 @@ private fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = state.email,
+            value = uiState.email,
             onValueChange = { onEmailChanged(it) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
@@ -108,17 +108,18 @@ private fun LoginScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .testTag("Email"),
             placeholder = {
                 Text(text = stringResource(id = R.string.email_field_hint))
             }
         )
-        OutlinedTextError(state.isEmailError)
+        OutlinedTextError(uiState.isEmailError)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = state.password,
+            value = uiState.password,
             onValueChange = { onPasswordChanged(it) },
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -133,10 +134,11 @@ private fun LoginScreen(
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .testTag("Senha"),
             placeholder = { Text(text = stringResource(id = R.string.password_field_hint)) }
         )
-        OutlinedTextError(state.isPasswordError)
+        OutlinedTextError(uiState.isPasswordError)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -158,7 +160,7 @@ private fun LoginScreen(
         }
     }
 
-    if (state.shouldShowLoading) {
+    if (uiState.shouldShowLoading) {
         LoadingView()
     }
 }

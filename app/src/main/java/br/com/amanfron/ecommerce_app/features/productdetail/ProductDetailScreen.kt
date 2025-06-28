@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel
+import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel.ShoppingCartViewState
 import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
 import coil.compose.AsyncImage
@@ -45,10 +46,14 @@ fun ProductDetailScreen(
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val shoppingCartState by shoppingCartViewModel.state.collectAsStateWithLifecycle()
 
     ProductDetailScreen(
         state,
-        onAddProductToCartClick = shoppingCartViewModel::addProductToCart
+        shoppingCartState,
+        onAddProductToCartClick = {
+            shoppingCartViewModel.addProductToCart(it)
+        }
     )
 
     LaunchedEffect(Unit) {
@@ -68,6 +73,7 @@ fun ProductDetailScreen(
 @Composable
 private fun ProductDetailScreen(
     state: ProductDetailViewState,
+    shoppingCartState: ShoppingCartViewState,
     onAddProductToCartClick: (product: Product) -> Unit
 ) {
     LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
@@ -193,6 +199,15 @@ private fun ProductDetailScreen(
                 Text(text = "Adicionar ao carrinho")
             }
 
+            if (shoppingCartState.shouldShowCheckoutDialog) {
+                EcommerceCheckoutDialog(
+                    onDismissRequest = {},
+                    onConfirmation = {},
+                    dialogTitle = "Finalizar a compra",
+                    dialogText = "Você deseja finalizar a compra ou continuar comprando?",
+                )
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -213,6 +228,7 @@ fun ProductDetailScreenPreview() {
                 categoryName = "Livros"
             )
         ),
+        shoppingCartState = ShoppingCartViewState(),
         onAddProductToCartClick = {}
     )
 }

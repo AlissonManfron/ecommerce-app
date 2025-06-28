@@ -52,6 +52,9 @@ class ShoppingCartViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             shoppingCartRepository.insertProductItem(product.toProductItem())
         }
+        _state.update {
+            it.copy(shouldShowCheckoutDialog = true)
+        }
     }
 
     fun getProductsCount() {
@@ -80,6 +83,7 @@ class ShoppingCartViewModel @Inject constructor(
         val products: List<Product> = emptyList(),
         val cartItemCount: Int = 0,
         var shouldShowLoading: Boolean = false,
-        var shouldShowDefaultError: Boolean = false
+        var shouldShowDefaultError: Boolean = false,
+        var shouldShowCheckoutDialog: Boolean = false
     )
 }
