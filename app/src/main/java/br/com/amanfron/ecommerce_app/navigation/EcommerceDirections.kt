@@ -24,4 +24,8 @@ class EcommerceDirections(
     val navigateToCreateAccount = {
         navController.navigate(CreateAccountRoute)
     }
+
+    val navigateBack = {
+        navController.popBackStack()
+    }
 }

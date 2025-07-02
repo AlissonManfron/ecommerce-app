@@ -62,6 +62,9 @@ fun EcommerceAppNavHost(
 
     composable<ProductDetailsRoute> { backStackEntry ->
         val productDetailsArgs: ProductDetailsRoute = backStackEntry.toRoute()
-        ProductDetailScreen(productId = productDetailsArgs.productId)
+        ProductDetailScreen(
+            productId = productDetailsArgs.productId,
+            onBackClick = directions.navigateBack
+        )
     }
 }

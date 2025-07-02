@@ -42,7 +42,8 @@ import coil.compose.AsyncImage
 fun ProductDetailScreen(
     viewModel: ProductDetailViewModel = hiltViewModel(),
     productId: Int,
-    shoppingCartViewModel: ShoppingCartViewModel = hiltViewModel()
+    shoppingCartViewModel: ShoppingCartViewModel = hiltViewModel(),
+    onBackClick: () -> Boolean
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -53,6 +54,10 @@ fun ProductDetailScreen(
         shoppingCartState,
         onAddProductToCartClick = {
             shoppingCartViewModel.addProductToCart(it)
+        },
+        onDismissRequest = {
+            shoppingCartViewModel.onDismissRequest()
+            onBackClick()
         }
     )
 
@@ -74,8 +79,10 @@ fun ProductDetailScreen(
 private fun ProductDetailScreen(
     state: ProductDetailViewState,
     shoppingCartState: ShoppingCartViewState,
-    onAddProductToCartClick: (product: Product) -> Unit
+    onAddProductToCartClick: (product: Product) -> Unit,
+    onDismissRequest: () -> Unit
 ) {
+
     LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
         Column(
             modifier = Modifier
@@ -201,7 +208,7 @@ private fun ProductDetailScreen(
 
             if (shoppingCartState.shouldShowCheckoutDialog) {
                 EcommerceCheckoutDialog(
-                    onDismissRequest = {},
+                    onDismissRequest = onDismissRequest,
                     onConfirmation = {},
                     dialogTitle = "Finalizar a compra",
                     dialogText = "Você deseja finalizar a compra ou continuar comprando?",
@@ -229,6 +236,7 @@ fun ProductDetailScreenPreview() {
             )
         ),
         shoppingCartState = ShoppingCartViewState(),
-        onAddProductToCartClick = {}
+        onAddProductToCartClick = {},
+        onDismissRequest = {}
     )
 }

@@ -57,6 +57,12 @@ class ShoppingCartViewModel @Inject constructor(
         }
     }
 
+    fun onDismissRequest() {
+        _state.update {
+            it.copy(shouldShowCheckoutDialog = false)
+        }
+    }
+
     fun getProductsCount() {
         viewModelScope.launch(ioDispatcher) {
             shoppingCartRepository.getProductsCount()
