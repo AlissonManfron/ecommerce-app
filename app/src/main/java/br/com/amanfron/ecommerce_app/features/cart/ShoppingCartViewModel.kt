@@ -18,6 +18,9 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
+import java.text.NumberFormat
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,9 +46,27 @@ class ShoppingCartViewModel @Inject constructor(
         _state.update { state ->
             state.copy(
                 products = productsItems.map { it.toProduct() },
-                cartItemCount = productsItems.size
+                cartItemCount = productsItems.size,
+                totalPrice = calculateTotalPrice(products = productsItems)
             )
         }
+    }
+
+    fun calculateTotalPrice(products: List<ProductItem>): String {
+        var totalPrice = BigDecimal.ZERO
+
+        for (product in products) {
+            try {
+                val priceDecimal = BigDecimal(product.price)
+                totalPrice = totalPrice.add(priceDecimal)
+            } catch (e: NumberFormatException) {
+            }
+        }
+
+        val locale = Locale("pt", "BR")
+        val currencyFormatter =
+            NumberFormat.getCurrencyInstance(locale)
+        return currencyFormatter.format(totalPrice)
     }
 
     fun addProductToCart(product: Product) {
@@ -88,6 +109,7 @@ class ShoppingCartViewModel @Inject constructor(
     data class ShoppingCartViewState(
         val products: List<Product> = emptyList(),
         val cartItemCount: Int = 0,
+        val totalPrice: String = "",
         var shouldShowLoading: Boolean = false,
         var shouldShowDefaultError: Boolean = false,
         var shouldShowCheckoutDialog: Boolean = false
