@@ -2,15 +2,11 @@ package br.com.amanfron.ecommerce_app.features.home
 
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +22,7 @@ import br.com.amanfron.ecommerce_app.ui.customviews.ProductSectionView
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToSeeMore: (categoryName: String) -> Unit,
     navigateToProductDetail: (productId: Int) -> Unit
@@ -34,6 +31,7 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     HomeScreen(
+        modifier,
         state,
         onSeeMoreClick = navigateToSeeMore,
         onProductClick = navigateToProductDetail
@@ -52,27 +50,27 @@ fun HomeScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun HomeScreen(
+    modifier: Modifier = Modifier,
     state: HomeViewState,
     onSeeMoreClick: (categoryName: String) -> Unit,
     onProductClick: (productId: Int) -> Unit
 ) {
     LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
-        Column(
-            modifier = Modifier
+        LazyColumn(
+            modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
         ) {
-            ProductSectionBannerView(
-                productList = state.bannerProductList,
-                onProductClick = onProductClick
-            )
-            ProductSectionView(
-                rankedProductList = state.rankedProductList,
-                onSeeMoreClick = onSeeMoreClick,
-                onProductClick = onProductClick
-            )
+            item {
+                ProductSectionBannerView(
+                    productList = state.bannerProductList,
+                    onProductClick = onProductClick
+                )
+                ProductSectionView(
+                    rankedProductList = state.rankedProductList,
+                    onSeeMoreClick = onSeeMoreClick,
+                    onProductClick = onProductClick
+                )
+            }
         }
     }
 }

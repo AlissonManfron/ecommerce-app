@@ -21,10 +21,11 @@ fun EcommerceAppNav() {
                 EcommerceAppNavigationBar(navController = navController)
             }
         }
-    ) { _ ->
+    ) { innerPadding ->
         EcommerceAppNavHost(
             navController = navController,
-            directions = ecommerceDirections
+            directions = ecommerceDirections,
+            innerPadding = innerPadding
         )
     }
 }

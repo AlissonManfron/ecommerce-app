@@ -1,7 +1,10 @@
 package br.com.amanfron.ecommerce_app.navigation
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,6 +22,7 @@ import br.com.amanfron.ecommerce_app.features.profile.ProfileScreen
 
 @Composable
 fun EcommerceAppNavHost(
+    innerPadding: PaddingValues,
     navController: NavHostController,
     directions: EcommerceDirections
 ) = NavHost(navController = navController, startDestination = LoginRoute) {
@@ -43,6 +47,7 @@ fun EcommerceAppNavHost(
     composable<HomeRoute> {
         val context = LocalContext.current
         HomeScreen(
+            modifier = Modifier.padding(innerPadding),
             navigateToSeeMore = { category ->
                 Toast.makeText(context, category, Toast.LENGTH_SHORT).show()
             },
@@ -53,11 +58,15 @@ fun EcommerceAppNavHost(
     }
 
     composable<ShoppingCartRoute> {
-        ShoppingCartScreen()
+        ShoppingCartScreen(
+            modifier = Modifier.padding(innerPadding),
+        )
     }
 
     composable<ProfileRoute> {
-        ProfileScreen()
+        ProfileScreen(
+            modifier = Modifier.padding(innerPadding),
+        )
     }
 
     composable<ProductDetailsRoute> { backStackEntry ->

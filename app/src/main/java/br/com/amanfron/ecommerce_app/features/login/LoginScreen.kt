@@ -53,7 +53,6 @@ fun LoginScreen(
         when {
             uiState.isSuccessLogin -> {
                 uiState.isSuccessLogin = false
-                Toast.makeText(context, R.string.login_success_message, Toast.LENGTH_SHORT).show()
                 navigateToHome()
             }
 
