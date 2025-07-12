@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel.ShoppingCartViewState
@@ -52,26 +53,28 @@ fun ShoppingCartScreen(
     modifier: Modifier = Modifier,
     viewModel: ShoppingCartViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
     val context = LocalContext.current
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    ShoppingCartScreen(
+    ShoppingCartContent(
         modifier = modifier,
         state = state
     )
 
-    LaunchedEffect(state) {
-        when {
-            state.shouldShowDefaultError -> {
-                state.shouldShowDefaultError = false
-                Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
-            }
+    LaunchedEffect(state.shouldShowDefaultError) {
+        if (state.shouldShowDefaultError) {
+            state.shouldShowDefaultError = false
+            Toast.makeText(
+                context,
+                R.string.try_again_message,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
 
 @Composable
-fun ShoppingCartScreen(
+fun ShoppingCartContent(
     modifier: Modifier = Modifier,
     state: ShoppingCartViewState,
 ) {
@@ -113,7 +116,6 @@ fun ShoppingCartScreen(
                             fontSize = Typography.bodyLarge.fontSize,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.size(size = 16.dp))
                         Text(
                             text = state.totalPrice,
                             fontSize = Typography.bodyLarge.fontSize,
@@ -240,7 +242,7 @@ fun ProductItem(
 @Preview(showBackground = true)
 @Composable
 fun ShoppingCartScreenPreview() = EcommerceAppTheme {
-    ShoppingCartScreen(
+    ShoppingCartContent(
         modifier = Modifier.fillMaxSize(),
         state = ShoppingCartViewState(
             products = listOf(
