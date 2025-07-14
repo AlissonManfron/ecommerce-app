@@ -37,7 +37,7 @@ fun ProductItem(
             .height(180.dp)
             .clickable { onProductClick.invoke(product.id) },
         shape = MaterialTheme.shapes.medium,
-        elevation =  CardDefaults.cardElevation(8.dp),
+        elevation = CardDefaults.cardElevation(8.dp),
     ) {
         Column(
             Modifier.padding(8.dp),

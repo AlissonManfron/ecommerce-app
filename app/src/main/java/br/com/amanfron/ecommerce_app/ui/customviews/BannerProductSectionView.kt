@@ -55,14 +55,20 @@ fun ProductSectionBannerView(
         }
     }
 
-    ProductSectionBannerView(
-        modifier,
-        CardDefaults.cardColors(),
-        productList,
-        pagerState,
-        onProductClick
-    )
-    PageIndicator(totalPages, pagerState.currentPage)
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        ProductSectionBannerView(
+            modifier,
+            CardDefaults.cardColors(),
+            productList,
+            pagerState,
+            onProductClick
+        )
+        PageIndicator(totalPages, pagerState.currentPage)
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
