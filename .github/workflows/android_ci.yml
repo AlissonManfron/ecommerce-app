@@ -7,6 +7,7 @@ on:
     branches: [ "main", "master" ] # Aciona o workflow em pull requests para as branches main ou master
 
 jobs:
+  # Job 1: Build do Projeto
   build:
     runs-on: ubuntu-latest # O runner que vai executar o job (máquina virtual Ubuntu mais recente)
     env:
@@ -29,5 +30,33 @@ jobs:
       - name: Build with Gradle # Passo 4: Constrói o projeto Android (roda o assembleDebug)
         run: ./gradlew assembleDebug --console=plain # --console=plain para output mais limpo
 
-      - name: Run Unit Tests # Passo 5: Executa os testes de unidade (roda o testDebugUnitTest)
+  # Job 2: Execução dos Testes de Unidade
+  run_unit_tests:
+    runs-on: ubuntu-latest
+    needs: build_apk # Este job SÓ rodará DEPOIS que o job 'build_apk' for concluído com sucesso
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }} # Se seus testes precisarem da BASE_URL também
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Unit Tests # Executa os testes de unidade
         run: ./gradlew testDebugUnitTest --console=plain
+
+      - name: Upload Unit Test Results # Upload dos relatórios de teste como um artefato
+        uses: actions/upload-artifact@v4
+        if: always() # Garante que este passo rode mesmo se os testes falharem
+        with:
+          name: unit-test-results
+          path: app/build/reports/tests/debugUnitTest/
