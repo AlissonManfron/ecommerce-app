@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest # O runner que vai executar o job (máquina virtual Ubuntu mais recente)
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }} # Isso injeta o valor do secret como uma variável de ambiente
 
     steps:
       - name: Checkout Repository # Passo 1: Clona o repositório

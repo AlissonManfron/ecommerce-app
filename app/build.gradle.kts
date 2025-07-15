@@ -33,17 +33,13 @@ android {
         if (rootProject.file("local.properties").exists()) {
             properties.load(FileInputStream(rootProject.file("local.properties")))
         }
-
+        val baseUrl = System.getenv("BASE_URL") ?: properties.getProperty("BASE_URL", "")
         debug {
-            buildConfigField(
-                "String", "BASE_URL", properties.getProperty("BASE_URL", "")
-            )
+            buildConfigField("String", "BASE_URL", baseUrl)
         }
 
         release {
-            buildConfigField(
-                "String", "BASE_URL", properties.getProperty("BASE_URL", "")
-            )
+            buildConfigField("String", "BASE_URL", baseUrl)
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
