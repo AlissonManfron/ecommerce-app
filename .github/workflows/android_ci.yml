@@ -1,4 +1,4 @@
-name: Android CI/CD
+name: Ecommerce CI/CD
 
 on:
   push:
@@ -8,27 +8,33 @@ on:
 
 jobs:
   # Job 1: Build do Projeto
-  build:
-    runs-on: ubuntu-latest # O runner que vai executar o job (máquina virtual Ubuntu mais recente)
+  build_apk:
+    runs-on: ubuntu-latest
     env:
-      BASE_URL: ${{ secrets.BASE_URL }} # Isso injeta o valor do secret como uma variável de ambiente
+      BASE_URL: ${{ secrets.BASE_URL }} # Seu secret para a URL base
 
     steps:
-      - name: Checkout Repository # Passo 1: Clona o repositório
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17 # Passo 2: Configura o Java Development Kit (JDK)
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17' # Versão do Java
-          distribution: 'temurin' # Distribuição do JDK
-          cache: 'gradle' # Armazena em cache as dependências do Gradle para builds mais rápidos
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
 
-      - name: Grant execute permission for gradlew # Passo 3: Concede permissão de execução ao gradlew
+      - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle # Passo 4: Constrói o projeto Android (roda o assembleDebug)
-        run: ./gradlew assembleDebug --console=plain # --console=plain para output mais limpo
+      - name: Build Debug APK # Constrói o APK de debug
+        run: ./gradlew assembleDebug --console=plain
+
+      - name: Upload Debug APK # Upload do APK como um artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk # Caminho do seu APK gerado
 
   # Job 2: Execução dos Testes de Unidade
   run_unit_tests:
