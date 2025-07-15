@@ -1,0 +1,31 @@
+name: Android CI/CD
+
+on:
+  push:
+    branches: [ "main", "master" ] # Aciona o workflow em pushes para as branches main ou master
+  pull_request:
+    branches: [ "main", "master" ] # Aciona o workflow em pull requests para as branches main ou master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # O runner que vai executar o job (máquina virtual Ubuntu mais recente)
+
+    steps:
+      - name: Checkout Repository # Passo 1: Clona o repositório
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 # Passo 2: Configura o Java Development Kit (JDK)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17' # Versão do Java
+          distribution: 'temurin' # Distribuição do JDK
+          cache: 'gradle' # Armazena em cache as dependências do Gradle para builds mais rápidos
+
+      - name: Grant execute permission for gradlew # Passo 3: Concede permissão de execução ao gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle # Passo 4: Constrói o projeto Android (roda o assembleDebug)
+        run: ./gradlew assembleDebug --console=plain # --console=plain para output mais limpo
+
+      - name: Run Unit Tests # Passo 5: Executa os testes de unidade (roda o testDebugUnitTest)
+        run: ./gradlew testDebugUnitTest --console=plain
