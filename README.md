@@ -16,6 +16,7 @@
 > - Architecture pattern: MVVM
 > - Asynchronous calls: Coroutines
 > - UI framework: Jetpack Compose
+> - With simplified github actions(CI/CD)
 > 
 <br/>
 
