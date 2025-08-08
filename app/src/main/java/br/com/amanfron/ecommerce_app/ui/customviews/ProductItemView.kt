@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import br.com.amanfron.ecommerce_app.ui.theme.Typography
 import coil.compose.AsyncImage
@@ -28,7 +28,7 @@ import coil.compose.AsyncImage
 @Composable
 fun ProductItem(
     modifier: Modifier = Modifier,
-    product: Product,
+    product: ProductResponse,
     onProductClick: (productId: Int) -> Unit
 ) {
     Card(
@@ -82,7 +82,7 @@ fun ProductItem(
 @Composable
 fun ProductItemPreview() = EcommerceAppTheme {
     ProductItem(
-        product = Product(
+        product = ProductResponse(
             id = 0,
             title = "Title",
             description = "Description",

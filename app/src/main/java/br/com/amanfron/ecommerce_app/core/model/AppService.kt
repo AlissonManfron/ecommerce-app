@@ -2,8 +2,8 @@ package br.com.amanfron.ecommerce_app.core.model
 
 import br.com.amanfron.ecommerce_app.core.model.request.user.LoginRequest
 import br.com.amanfron.ecommerce_app.core.model.request.user.RegisterRequest
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductsResponse
 import br.com.amanfron.ecommerce_app.core.model.response.user.LoginResponse
 import br.com.amanfron.ecommerce_app.core.model.response.user.RegisterResponse
 import retrofit2.Response
@@ -20,8 +20,8 @@ interface AppService {
     suspend fun doRegister(@Body registerRequest: RegisterRequest): Response<RegisterResponse>
 
     @GET("api/products/rankeds")
-    suspend fun getRankedProducts(): Response<ProductResponse>
+    suspend fun getRankedProducts(): Response<ProductsResponse>
 
     @GET("api/products")
-    suspend fun getProductDetail(@Query("id") id: Int): Response<Product>
+    suspend fun getProductDetail(@Query("id") id: Int): Response<ProductResponse>
 }

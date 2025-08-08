@@ -1,6 +1,7 @@
 package br.com.amanfron.ecommerce_app.features.cart
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,17 +17,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.domain.model.Product
 import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel.ShoppingCartViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
@@ -58,7 +62,8 @@ fun ShoppingCartScreen(
 
     ShoppingCartContent(
         modifier = modifier,
-        state = state
+        state = state,
+        onQuantityChange = {}
     )
 
     LaunchedEffect(state.shouldShowDefaultError) {
@@ -77,6 +82,7 @@ fun ShoppingCartScreen(
 fun ShoppingCartContent(
     modifier: Modifier = Modifier,
     state: ShoppingCartViewState,
+    onQuantityChange: (Int) -> Unit
 ) {
     LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
         Scaffold(
@@ -176,7 +182,8 @@ fun ShoppingCartContent(
                     items(items = state.products) { product ->
                         ProductItem(
                             product = product,
-                            onProductClick = {}
+                            onProductClick = {},
+                            onQuantityChange = onQuantityChange
                         )
                     }
                 }
@@ -189,7 +196,8 @@ fun ShoppingCartContent(
 fun ProductItem(
     modifier: Modifier = Modifier,
     product: Product,
-    onProductClick: (productId: Int) -> Unit
+    onProductClick: (productId: Int) -> Unit,
+    onQuantityChange: (Int) -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -234,6 +242,58 @@ fun ProductItem(
                     fontSize = Typography.bodySmall.fontSize,
                     lineHeight = 14.sp
                 )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedIconButton(
+                        onClick = {
+                            if (product.quantity > 1) {
+                                onQuantityChange(product.quantity - 1)
+                            }
+                        },
+                        modifier = Modifier.size(12.dp),
+                        shape = CircleShape,
+                        border = BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                        ),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Diminuir quantidade",
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text = product.quantity.toString(),
+                        fontSize = Typography.bodySmall.fontSize
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    OutlinedIconButton(
+                        onClick = {
+                            if (product.quantity > 1) {
+                                onQuantityChange(product.quantity - 1)
+                            }
+                        },
+                        modifier = Modifier.size(12.dp),
+                        shape = CircleShape,
+                        border = BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                        ),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Aumentar quantidade",
+                        )
+                    }
+                }
             }
         }
     }
@@ -253,7 +313,8 @@ fun ShoppingCartScreenPreview() = EcommerceAppTheme {
                     description = "Description 1",
                     imageUrl = "https://via.placeholder.com/150",
                     categoryName = "Category 1",
-                    categoryId = 1
+                    categoryId = 1,
+                    quantity = 1
                 ),
                 Product(
                     id = 2,
@@ -262,10 +323,12 @@ fun ShoppingCartScreenPreview() = EcommerceAppTheme {
                     description = "Description 2",
                     imageUrl = "https://via.placeholder.com/167",
                     categoryName = "Category 3",
-                    categoryId = 2
+                    categoryId = 2,
+                    quantity = 1
                 ),
             ),
             totalPrice = "R$ 270,00"
-        )
+        ),
+        onQuantityChange = {}
     )
 }

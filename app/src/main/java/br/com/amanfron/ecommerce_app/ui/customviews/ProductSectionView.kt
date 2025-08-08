@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import br.com.amanfron.ecommerce_app.ui.theme.Typography
@@ -44,7 +44,7 @@ fun ProductSectionView(
 fun ProductSectionView(
     modifier: Modifier = Modifier,
     categoryName: String,
-    productList: List<Product>,
+    productList: List<ProductResponse>,
     onSeeMoreClick: (categoryName: String) -> Unit,
     onProductClick: (productId: Int) -> Unit
 ) {
@@ -110,7 +110,7 @@ fun ProductSectionPreview() = EcommerceAppTheme {
     ProductSectionView(
         categoryName = "Teste",
         productList = listOf(
-            Product(
+            ProductResponse(
                 id = 0,
                 title = "Title",
                 description = "Description",

@@ -2,10 +2,10 @@ package br.com.amanfron.ecommerce_app.features.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.amanfron.ecommerce_app.core.domain.model.Product
 import br.com.amanfron.ecommerce_app.core.local.ProductItem
 import br.com.amanfron.ecommerce_app.core.local.toProduct
 import br.com.amanfron.ecommerce_app.core.local.toProductItem
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
 import br.com.amanfron.ecommerce_app.core.repository.ShoppingCartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

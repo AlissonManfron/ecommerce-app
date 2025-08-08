@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.domain.model.Product
 import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel
 import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel.ShoppingCartViewState
 import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailViewState
@@ -232,7 +232,8 @@ fun ProductDetailScreenPreview() {
                 imageUrl = "",
                 price = "20.0",
                 categoryId = 1,
-                categoryName = "Livros"
+                categoryName = "Livros",
+                quantity = 1
             )
         ),
         shoppingCartState = ShoppingCartViewState(),

@@ -2,9 +2,9 @@ package br.com.amanfron.ecommerce_app.features.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductsResponse
 import br.com.amanfron.ecommerce_app.core.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +34,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun onGetProductsSuccess(response: ProductResponse) {
+    private fun onGetProductsSuccess(response: ProductsResponse) {
         _state.update {
             it.copy(
                 bannerProductList = response.bannerProductList,
@@ -58,7 +58,7 @@ class HomeViewModel @Inject constructor(
     data class HomeViewState(
         var shouldShowLoading: Boolean = false,
         var shouldShowDefaultError: Boolean = false,
-        val bannerProductList: List<Product> = emptyList(),
+        val bannerProductList: List<ProductResponse> = emptyList(),
         val rankedProductList: List<ProductCategoryResponse> = emptyList()
     )
 }

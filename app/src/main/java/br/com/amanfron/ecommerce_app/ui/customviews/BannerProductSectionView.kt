@@ -33,7 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
@@ -42,7 +42,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun ProductSectionBannerView(
     modifier: Modifier = Modifier,
-    productList: List<Product>,
+    productList: List<ProductResponse>,
     pagerState: PagerState = rememberPagerState { productList.size },
     onProductClick: (productId: Int) -> Unit
 ) {
@@ -76,7 +76,7 @@ fun ProductSectionBannerView(
 fun ProductSectionBannerView(
     modifier: Modifier = Modifier,
     cardColors: CardColors,
-    productList: List<Product>,
+    productList: List<ProductResponse>,
     pagerState: PagerState,
     onProductClick: (productId: Int) -> Unit
 ) {
@@ -153,7 +153,7 @@ fun PageIndicator(totalPages: Int, currentPage: Int) {
 fun ProductSectionBannerViewPreview() = EcommerceAppTheme {
     ProductSectionBannerView(
         productList = listOf(
-            Product(
+            ProductResponse(
                 0,
                 "Title",
                 "Description",

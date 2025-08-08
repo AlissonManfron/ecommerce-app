@@ -3,7 +3,7 @@ package br.com.amanfron.ecommerce_app.core.local
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.domain.model.Product
 
 @Entity(tableName = "products")
 data class ProductItem(

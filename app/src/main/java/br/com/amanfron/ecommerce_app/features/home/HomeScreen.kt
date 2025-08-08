@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
-import br.com.amanfron.ecommerce_app.core.model.response.product.Product
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
@@ -86,7 +86,7 @@ fun HomeScreenPreview() {
                 ProductCategoryResponse(
                     categoryName = "",
                     products = listOf(
-                        Product(
+                        ProductResponse(
                             id = 0,
                             title = "Title",
                             description = "Description",
