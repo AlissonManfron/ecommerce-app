@@ -7,4 +7,5 @@ plugins {
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.room) apply false
     alias(libs.plugins.serialization) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }

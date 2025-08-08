@@ -9,16 +9,17 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.room)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "br.com.amanfron.ecommerce_app"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "br.com.amanfron.ecommerce_app"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -59,9 +60,6 @@ android {
     }
     room {
         schemaDirectory("$projectDir/schemas")
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -104,15 +102,18 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
 
-    // Tests
-    testImplementation(libs.junit)
-
     // Room
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
 
     implementation(libs.kotlinx.coroutines.core)
+
+    // Tests
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Mockito
     testImplementation(libs.mockito.core)
