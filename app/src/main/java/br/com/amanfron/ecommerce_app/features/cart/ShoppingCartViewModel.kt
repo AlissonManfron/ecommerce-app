@@ -43,23 +43,26 @@ class ShoppingCartViewModel @Inject constructor(
     }
 
     private fun onGetProductItemsSuccess(productsItems: List<ProductItem>) {
+        val products = productsItems.map { it.toProduct() }
         _state.update { state ->
             state.copy(
-                products = productsItems.map { it.toProduct() },
-                cartItemCount = productsItems.size,
-                totalPrice = calculateTotalPrice(products = productsItems)
+                products = products,
+                cartItemCount = products.size,
+                totalPrice = calculateTotalPrice(products = products)
             )
         }
     }
 
-    fun calculateTotalPrice(products: List<ProductItem>): String {
+    fun calculateTotalPrice(products: List<Product>): String {
         var totalPrice = BigDecimal.ZERO
 
         for (product in products) {
             try {
                 val priceDecimal = BigDecimal(product.price)
-                totalPrice = totalPrice.add(priceDecimal)
+                val totalItemPrice = priceDecimal.multiply(BigDecimal(product.quantity))
+                totalPrice = totalPrice.add(totalItemPrice)
             } catch (e: NumberFormatException) {
+                // Consider logging this error or handling it more explicitly
             }
         }
 
@@ -69,12 +72,57 @@ class ShoppingCartViewModel @Inject constructor(
         return currencyFormatter.format(totalPrice)
     }
 
+    fun onIncreaseQuantityClick(selectedProduct: Product) {
+        val updatedProducts = _state.value.products.map { product ->
+            if (product.id == selectedProduct.id) {
+                product.copy(quantity = product.quantity + 1)
+            } else {
+                product
+            }
+        }
+
+        _state.update { currentState ->
+            currentState.copy(
+                products = updatedProducts,
+                totalPrice = calculateTotalPrice(products = updatedProducts)
+            )
+        }
+    }
+
+    fun onDecreaseQuantityClick(selectedProduct: Product) {
+        val updatedProducts = _state.value.products.mapNotNull { product ->
+            if (product.id == selectedProduct.id) {
+                val newQuantity = product.quantity - 1
+                if (newQuantity <= 0) {
+                    null
+                } else {
+                    product.copy(quantity = newQuantity)
+                }
+            } else {
+                product
+            }
+        }
+
+        _state.update { currentState ->
+            currentState.copy(
+                products = updatedProducts,
+                totalPrice = calculateTotalPrice(products = updatedProducts)
+            )
+        }
+    }
+
     fun addProductToCart(product: Product) {
         viewModelScope.launch(ioDispatcher) {
             shoppingCartRepository.insertProductItem(product.toProductItem())
         }
         _state.update {
             it.copy(shouldShowCheckoutDialog = true)
+        }
+    }
+
+    fun clearDefaultError() {
+        _state.update {
+            it.copy(shouldShowDefaultError = false)
         }
     }
 
@@ -87,7 +135,11 @@ class ShoppingCartViewModel @Inject constructor(
     fun getProductsCount() {
         viewModelScope.launch(ioDispatcher) {
             shoppingCartRepository.getProductsCount()
-                .catch { }
+                .catch {
+                    _state.update { currentState ->
+                        currentState.copy(shouldShowDefaultError = true)
+                    }
+                }
                 .collect(::onGetProductsCountSuccess)
         }
     }
@@ -110,8 +162,8 @@ class ShoppingCartViewModel @Inject constructor(
         val products: List<Product> = emptyList(),
         val cartItemCount: Int = 0,
         val totalPrice: String = "",
-        var shouldShowLoading: Boolean = false,
-        var shouldShowDefaultError: Boolean = false,
-        var shouldShowCheckoutDialog: Boolean = false
+        val shouldShowLoading: Boolean = false,
+        val shouldShowDefaultError: Boolean = false,
+        val shouldShowCheckoutDialog: Boolean = false
     )
 }

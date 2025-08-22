@@ -63,12 +63,13 @@ fun ShoppingCartScreen(
     ShoppingCartContent(
         modifier = modifier,
         state = state,
-        onQuantityChange = {}
+        onDecreaseQuantityClick = viewModel::onDecreaseQuantityClick,
+        onIncreaseQuantityClick = viewModel::onIncreaseQuantityClick
     )
 
     LaunchedEffect(state.shouldShowDefaultError) {
         if (state.shouldShowDefaultError) {
-            state.shouldShowDefaultError = false
+            viewModel.clearDefaultError()
             Toast.makeText(
                 context,
                 R.string.try_again_message,
@@ -82,7 +83,8 @@ fun ShoppingCartScreen(
 fun ShoppingCartContent(
     modifier: Modifier = Modifier,
     state: ShoppingCartViewState,
-    onQuantityChange: (Int) -> Unit
+    onDecreaseQuantityClick: (product: Product) -> Unit,
+    onIncreaseQuantityClick: (product: Product) -> Unit,
 ) {
     LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
         Scaffold(
@@ -95,7 +97,7 @@ fun ShoppingCartContent(
                 ) {
                     Spacer(modifier = Modifier.size(size = 8.dp))
                     Text(
-                        text = "Lista de Produtos",
+                        text = "Seu carrinho",
                         fontSize = Typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -179,11 +181,12 @@ fun ShoppingCartContent(
                         bottom = 8.dp
                     )
                 ) {
-                    items(items = state.products) { product ->
+                    items(items = state.products, key = { it.id }) { product ->
                         ProductItem(
                             product = product,
                             onProductClick = {},
-                            onQuantityChange = onQuantityChange
+                            onDecreaseQuantityClick = onDecreaseQuantityClick,
+                            onIncreaseQuantityClick = onIncreaseQuantityClick
                         )
                     }
                 }
@@ -197,7 +200,8 @@ fun ProductItem(
     modifier: Modifier = Modifier,
     product: Product,
     onProductClick: (productId: Int) -> Unit,
-    onQuantityChange: (Int) -> Unit,
+    onDecreaseQuantityClick: (product: Product) -> Unit,
+    onIncreaseQuantityClick: (product: Product) -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -246,14 +250,12 @@ fun ProductItem(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     OutlinedIconButton(
                         onClick = {
-                            if (product.quantity > 1) {
-                                onQuantityChange(product.quantity - 1)
-                            }
+                            onDecreaseQuantityClick(product)
                         },
                         modifier = Modifier.size(12.dp),
                         shape = CircleShape,
@@ -263,23 +265,19 @@ fun ProductItem(
                         ),
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Add,
+                            painter = painterResource(R.drawable.ic_remove),
                             contentDescription = "Diminuir quantidade",
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
                         text = product.quantity.toString(),
                         fontSize = Typography.bodySmall.fontSize
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     OutlinedIconButton(
                         onClick = {
-                            if (product.quantity > 1) {
-                                onQuantityChange(product.quantity - 1)
-                            }
+                            onIncreaseQuantityClick(product)
                         },
                         modifier = Modifier.size(12.dp),
                         shape = CircleShape,
@@ -329,6 +327,7 @@ fun ShoppingCartScreenPreview() = EcommerceAppTheme {
             ),
             totalPrice = "R$ 270,00"
         ),
-        onQuantityChange = {}
+        onDecreaseQuantityClick = {},
+        onIncreaseQuantityClick = {}
     )
 }
