@@ -27,7 +27,7 @@ data object ShoppingCartRoute {
 
 @Serializable
 data object ProfileRoute {
-    val title = "Profile"
+    val title = "Conta"
     val icon = Icons.Filled.AccountCircle
 }
 
