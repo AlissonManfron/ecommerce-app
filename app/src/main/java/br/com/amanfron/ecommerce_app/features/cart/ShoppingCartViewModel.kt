@@ -62,7 +62,6 @@ class ShoppingCartViewModel @Inject constructor(
                 val totalItemPrice = priceDecimal.multiply(BigDecimal(product.quantity))
                 totalPrice = totalPrice.add(totalItemPrice)
             } catch (e: NumberFormatException) {
-                // Consider logging this error or handling it more explicitly
             }
         }
 
@@ -94,6 +93,7 @@ class ShoppingCartViewModel @Inject constructor(
             if (product.id == selectedProduct.id) {
                 val newQuantity = product.quantity - 1
                 if (newQuantity <= 0) {
+                    deleteProductToCart(product)
                     null
                 } else {
                     product.copy(quantity = newQuantity)
@@ -106,8 +106,15 @@ class ShoppingCartViewModel @Inject constructor(
         _state.update { currentState ->
             currentState.copy(
                 products = updatedProducts,
-                totalPrice = calculateTotalPrice(products = updatedProducts)
+                totalPrice = calculateTotalPrice(products = updatedProducts),
+                cartItemCount = updatedProducts.size
             )
+        }
+    }
+
+    private fun deleteProductToCart(product: Product) {
+        viewModelScope.launch(ioDispatcher) {
+            shoppingCartRepository.deleteProductItem(product.toProductItem())
         }
     }
 
