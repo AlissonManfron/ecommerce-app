@@ -33,7 +33,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.domain.model.Product
 import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel
-import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel.ShoppingCartViewState
 import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
 import coil.compose.AsyncImage
@@ -41,22 +40,30 @@ import coil.compose.AsyncImage
 @Composable
 fun ProductDetailScreen(
     viewModel: ProductDetailViewModel = hiltViewModel(),
-    productId: Int,
     shoppingCartViewModel: ShoppingCartViewModel = hiltViewModel(),
+    productId: Int,
+    onGoToCart: () -> Unit,
     onBackClick: () -> Boolean
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val shoppingCartState by shoppingCartViewModel.state.collectAsStateWithLifecycle()
 
     ProductDetailScreen(
         state,
-        shoppingCartState,
-        onAddProductToCartClick = {
-            shoppingCartViewModel.addProductToCart(it)
+        onPurchaseProductClick = {
+            state.product?.let {
+                shoppingCartViewModel.addProductToCart(it)
+            }
+            onGoToCart()
         },
-        onDismissRequest = {
-            shoppingCartViewModel.onDismissRequest()
+        onAddProductToCartClick = {
+            state.product?.let {
+                shoppingCartViewModel.addProductToCart(it)
+                Toast.makeText(
+                    context,
+                    R.string.add_product_to_cart_message, Toast.LENGTH_SHORT
+                ).show()
+            }
             onBackClick()
         }
     )
@@ -69,7 +76,10 @@ fun ProductDetailScreen(
         when {
             state.shouldShowDefaultError -> {
                 state.shouldShowDefaultError = false
-                Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    R.string.try_again_message, Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -78,9 +88,8 @@ fun ProductDetailScreen(
 @Composable
 private fun ProductDetailScreen(
     state: ProductDetailViewState,
-    shoppingCartState: ShoppingCartViewState,
-    onAddProductToCartClick: (product: Product) -> Unit,
-    onDismissRequest: () -> Unit
+    onPurchaseProductClick: () -> Unit,
+    onAddProductToCartClick: () -> Unit
 ) {
 
     LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
@@ -183,7 +192,7 @@ private fun ProductDetailScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { },
+                onClick = onPurchaseProductClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
@@ -194,25 +203,12 @@ private fun ProductDetailScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedButton(
-                onClick = {
-                    state.product?.let {
-                        onAddProductToCartClick(it)
-                    }
-                },
+                onClick = onAddProductToCartClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
                 Text(text = "Adicionar ao carrinho")
-            }
-
-            if (shoppingCartState.shouldShowCheckoutDialog) {
-                EcommerceCheckoutDialog(
-                    onDismissRequest = onDismissRequest,
-                    onConfirmation = {},
-                    dialogTitle = "Finalizar a compra",
-                    dialogText = "Você deseja finalizar a compra ou continuar comprando?",
-                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -236,8 +232,7 @@ fun ProductDetailScreenPreview() {
                 quantity = 1
             )
         ),
-        shoppingCartState = ShoppingCartViewState(),
-        onAddProductToCartClick = {},
-        onDismissRequest = {}
+        onPurchaseProductClick = {},
+        onAddProductToCartClick = {}
     )
 }

@@ -122,20 +122,11 @@ class ShoppingCartViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             shoppingCartRepository.insertProductItem(product.toProductItem())
         }
-        _state.update {
-            it.copy(shouldShowCheckoutDialog = true)
-        }
     }
 
     fun clearDefaultError() {
         _state.update {
             it.copy(shouldShowDefaultError = false)
-        }
-    }
-
-    fun onDismissRequest() {
-        _state.update {
-            it.copy(shouldShowCheckoutDialog = false)
         }
     }
 
@@ -170,7 +161,6 @@ class ShoppingCartViewModel @Inject constructor(
         val cartItemCount: Int = 0,
         val totalPrice: String = "",
         val shouldShowLoading: Boolean = false,
-        val shouldShowDefaultError: Boolean = false,
-        val shouldShowCheckoutDialog: Boolean = false
+        val shouldShowDefaultError: Boolean = false
     )
 }

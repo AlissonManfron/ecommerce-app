@@ -73,7 +73,8 @@ fun EcommerceAppNavHost(
         val productDetailsArgs: ProductDetailsRoute = backStackEntry.toRoute()
         ProductDetailScreen(
             productId = productDetailsArgs.productId,
-            onBackClick = directions.navigateBack
+            onBackClick = directions.navigateBack,
+            onGoToCart = directions.navigateToCart
         )
     }
 }

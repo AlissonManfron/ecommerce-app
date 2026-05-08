@@ -2,6 +2,7 @@
     <!-- Common Area -->
     <string name="app_name">Ecommerce</string>
     <string name="try_again_message">Ops, ocorreu um erro, tente novamente!</string>
+    <string name="add_product_to_cart_message">Produto adicionado ao carrinho!</string>
     <string name="name_field_hint">Nome</string>
     <string name="email_field_hint">Email</string>
     <string name="password_field_hint">Senha</string>

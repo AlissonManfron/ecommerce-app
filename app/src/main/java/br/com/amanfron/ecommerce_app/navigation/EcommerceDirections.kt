@@ -10,7 +10,18 @@ class EcommerceDirections(
         navController.navigate(
             HomeRoute,
             navOptions = navOptions {
-                popUpTo(LoginRoute) {
+                popUpTo<LoginRoute> {
+                    inclusive = true
+                }
+            }
+        )
+    }
+
+    val navigateToCart = {
+        navController.navigate(
+            ShoppingCartRoute,
+            navOptions = navOptions {
+                popUpTo<ProductDetailsRoute> {
                     inclusive = true
                 }
             }
