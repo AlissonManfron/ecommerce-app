@@ -91,12 +91,12 @@ private fun LoginScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            painter = painterResource(id = R.drawable.ic_splash_logo),
             contentDescription = null,
-            modifier = Modifier.size(120.dp)
+            modifier = Modifier.size(160.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
         TextField(
             value = uiState.email,

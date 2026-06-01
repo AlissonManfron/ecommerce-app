@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.Ecommerceapp" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@drawable/bg_splash_gradient</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.Ecommerceapp</item>
+    </style>
 </resources>

@@ -1,0 +1,46 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="320"
+    android:viewportHeight="320">
+
+    <!-- Alça -->
+    <path
+        android:pathData="
+            M108,116
+            C108,84 126,66 160,66
+            C194,66 212,84 212,116"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#C084FC"
+        android:strokeWidth="10"
+        android:strokeLineCap="round"/>
+
+    <!-- Corpo da sacola -->
+    <path
+        android:pathData="
+            M84,116
+            L236,116
+            L222,220
+            C220,238 206,252 188,252
+            L132,252
+            C114,252 100,238 98,220
+            Z"
+        android:fillColor="#A855F7"/>
+
+    <!-- Letra A -->
+    <path
+        android:pathData="
+            M160,146
+            L132,206
+
+            M160,146
+            L188,206
+
+            M142,182
+            L178,182"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+</vector>
