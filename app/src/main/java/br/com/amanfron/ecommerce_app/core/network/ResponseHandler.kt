@@ -22,7 +22,10 @@ class ResponseHandlerImpl @Inject constructor() : ResponseHandler {
                 val body = response.body()
                 when {
                     response.isSuccessful && body != null -> Result.success(body)
-                    else -> Result.failure(Exception(defaultErrorMessage))
+                    else -> {
+                        response.errorBody()?.close()
+                        Result.failure(Exception(defaultErrorMessage))
+                    }
                 }
             }.getOrThrow()
 
