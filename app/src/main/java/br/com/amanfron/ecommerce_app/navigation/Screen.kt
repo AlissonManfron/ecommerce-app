@@ -5,6 +5,8 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -70,3 +72,7 @@ val bottomNavItemsList = listOf(
     ShoppingCartNavItem,
     ProfileNavItem
 )
+
+fun NavDestination?.isRouteInBottomBar(): Boolean {
+    return bottomNavItemsList.any { this?.hasRoute(it.route::class) == true }
+}

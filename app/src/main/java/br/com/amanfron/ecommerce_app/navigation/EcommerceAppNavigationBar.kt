@@ -14,6 +14,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -59,7 +60,7 @@ fun EcommerceAppNavigationBar(
                     }
                 },
                 label = { Text(navItem.title) },
-                selected = currentDestination.isRoute(navItem.route),
+                selected = currentDestination?.hasRoute(navItem.route::class) == true,
                 onClick = {
                     navController.navigate(navItem.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -72,9 +73,4 @@ fun EcommerceAppNavigationBar(
             )
         }
     }
-}
-
-fun <T : Any> androidx.navigation.NavDestination?.isRoute(route: T): Boolean {
-    return this?.route == route::class.qualifiedName ||  // Para rotas de objeto simples
-            this?.route?.startsWith(route::class.qualifiedName.orEmpty()) == true // Para rotas com args
 }
