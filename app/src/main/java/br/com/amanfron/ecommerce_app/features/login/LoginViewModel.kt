@@ -5,9 +5,14 @@ import androidx.lifecycle.viewModelScope
 import br.com.amanfron.ecommerce_app.core.model.response.user.LoginResponse
 import br.com.amanfron.ecommerce_app.core.repository.AuthRepository
 import br.com.amanfron.ecommerce_app.core.repository.UserRepository
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent.OnLoginClick
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent.SetEmail
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent.SetPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -25,14 +30,25 @@ class LoginViewModel @Inject constructor(
     private val _state = MutableStateFlow(LoginViewState())
     val state: StateFlow<LoginViewState> = _state.asStateFlow()
 
-    fun setEmail(newEmail: String) {
+    private val _effect = MutableSharedFlow<LoginEffect>()
+    val effect = _effect.asSharedFlow()
+
+    fun onIntent(intent: LoginIntent) {
+        when (intent) {
+            is SetEmail -> setEmail(intent.email)
+            is SetPassword -> setPassword(intent.password)
+            is OnLoginClick -> onLoginButtonClick()
+        }
+    }
+
+    private fun setEmail(newEmail: String) {
         _state.update {
             it.copy(email = newEmail)
         }
         checkFieldErrors()
     }
 
-    fun setPassword(newPassword: String) {
+    private fun setPassword(newPassword: String) {
         _state.update {
             it.copy(password = newPassword)
         }
@@ -48,16 +64,16 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onButtonLoginClick() {
+    private fun onLoginButtonClick() {
         val email = _state.value.email
         val password = _state.value.password
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
             viewModelScope.launch {
                 authRepository.login(email, password)
-                    .catch { onLoginError() }
                     .onStart { shouldShowLoading(true) }
                     .onCompletion { shouldShowLoading(false) }
+                    .catch { emitEffect(LoginEffect.ShowErrorToast) }
                     .collect(::onLoginSuccess)
             }
         }
@@ -65,14 +81,12 @@ class LoginViewModel @Inject constructor(
 
     private fun onLoginSuccess(response: LoginResponse) {
         userRepository.setUser(response.name, response.email, response.token)
-        _state.update {
-            it.copy(isSuccessLogin = true)
-        }
+        emitEffect(LoginEffect.NavigateToHome)
     }
 
-    private fun onLoginError() {
-        _state.update {
-            it.copy(shouldShowDefaultError = true)
+    private fun emitEffect(effect: LoginEffect) {
+        viewModelScope.launch {
+            _effect.emit(effect)
         }
     }
 
@@ -83,12 +97,21 @@ class LoginViewModel @Inject constructor(
     }
 
     data class LoginViewState(
-        var email: String = "a@a.com",
-        var password: String = "12345",
-        var shouldShowLoading: Boolean = false,
-        var shouldShowDefaultError: Boolean = false,
-        var isEmailError: Boolean = false,
-        var isPasswordError: Boolean = false,
-        var isSuccessLogin: Boolean = false
+        val email: String = "",
+        val password: String = "",
+        val shouldShowLoading: Boolean = false,
+        val isEmailError: Boolean = false,
+        val isPasswordError: Boolean = false
     )
+
+    sealed interface LoginIntent {
+        data class SetEmail(val email: String) : LoginIntent
+        data class SetPassword(val password: String) : LoginIntent
+        data object OnLoginClick : LoginIntent
+    }
+
+    sealed interface LoginEffect {
+        data object NavigateToHome : LoginEffect
+        data object ShowErrorToast : LoginEffect
+    }
 }

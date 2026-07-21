@@ -17,7 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,44 +31,43 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginEffect.NavigateToHome
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginEffect.ShowErrorToast
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingView
 import br.com.amanfron.ecommerce_app.ui.customviews.OutlinedTextError
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
+import br.com.amanfron.ecommerce_app.ui.utils.ObserveAsEvents
 
 @Composable
 fun LoginScreen(
-    uiState: LoginViewState,
+    viewModel: LoginViewModel = hiltViewModel(),
     navigateToCreateAccount: () -> Unit,
     navigateToHome: () -> Unit,
-    onEmailChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onLoginButtonClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(uiState) {
-        when {
-            uiState.isSuccessLogin -> {
-                uiState.isSuccessLogin = false
-                navigateToHome()
-            }
-
-            uiState.shouldShowDefaultError -> {
-                uiState.shouldShowDefaultError = false
+    viewModel.effect.ObserveAsEvents { effect ->
+        when (effect) {
+            is NavigateToHome -> navigateToHome()
+            is ShowErrorToast -> {
                 Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     LoginScreen(
-        uiState,
-        keyboardController,
-        onEmailChanged = onEmailChanged,
-        onPasswordChanged = onPasswordChanged,
-        onLoginButtonClick = onLoginButtonClick,
+        uiState = uiState,
+        keyboardController = keyboardController,
+        onEmailChanged = { viewModel.onIntent(LoginIntent.SetEmail(it)) },
+        onPasswordChanged = { viewModel.onIntent(LoginIntent.SetPassword(it)) },
+        onLoginButtonClick = { viewModel.onIntent(LoginIntent.OnLoginClick) },
         onCreateAccountButtonClick = navigateToCreateAccount
     )
 }

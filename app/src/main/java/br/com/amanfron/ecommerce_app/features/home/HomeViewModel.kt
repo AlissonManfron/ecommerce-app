@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductsResponse
 import br.com.amanfron.ecommerce_app.core.repository.ProductRepository
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToProductDetail
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToSeeMore
@@ -49,29 +50,31 @@ class HomeViewModel @Inject constructor(
     private fun fetchProducts() {
         viewModelScope.launch {
             repository.getRankedProducts()
-                .onStart {
-                    _state.update { it.copy(shouldShowLoading = true) }
-                }
-                .onCompletion {
-                    _state.update { it.copy(shouldShowLoading = false) }
-                }
-                .catch {
-                    emitEffect(ShowErrorToast)
-                }
-                .collect { response ->
-                    _state.update {
-                        it.copy(
-                            bannerProductList = response.bannerProductList,
-                            rankedProductList = response.rankedProductList
-                        )
-                    }
-                }
+                .onStart { shouldShowLoading(true) }
+                .onCompletion { shouldShowLoading(false) }
+                .catch { emitEffect(ShowErrorToast) }
+                .collect(::onGetRankedProductsSuccess)
         }
     }
 
     private fun emitEffect(effect: HomeEffect) {
         viewModelScope.launch {
             _effect.emit(effect)
+        }
+    }
+
+    private fun onGetRankedProductsSuccess(response: ProductsResponse) {
+        _state.update {
+            it.copy(
+                bannerProductList = response.bannerProductList,
+                rankedProductList = response.rankedProductList
+            )
+        }
+    }
+
+    private fun shouldShowLoading(should: Boolean) {
+        _state.update {
+            it.copy(shouldShowLoading = should)
         }
     }
 
