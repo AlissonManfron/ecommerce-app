@@ -5,7 +5,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -13,12 +12,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
+import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToProductDetail
+import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToSeeMore
+import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.ShowErrorToast
+import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeIntent
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
 import br.com.amanfron.ecommerce_app.ui.customviews.ProductSectionBannerView
 import br.com.amanfron.ecommerce_app.ui.customviews.ProductSectionView
+import br.com.amanfron.ecommerce_app.ui.utils.ObserveAsEvents
 
 @Composable
 fun HomeScreen(
@@ -30,21 +34,33 @@ fun HomeScreen(
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    HomeScreen(
-        modifier,
-        state,
-        onSeeMoreClick = navigateToSeeMore,
-        onProductClick = navigateToProductDetail
-    )
+    viewModel.effect.ObserveAsEvents { effect ->
+        when (effect) {
+            is ShowErrorToast -> {
+                Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT)
+                    .show()
+            }
 
-    LaunchedEffect(state) {
-        when {
-            state.shouldShowDefaultError -> {
-                state.shouldShowDefaultError = false
-                Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
+            is NavigateToProductDetail -> {
+                navigateToProductDetail(effect.productId)
+            }
+
+            is NavigateToSeeMore -> {
+                navigateToSeeMore(effect.categoryName)
             }
         }
     }
+
+    HomeScreen(
+        modifier = modifier,
+        state = state,
+        onSeeMoreClick = { categoryName ->
+            viewModel.onIntent(HomeIntent.OnSeeMoreClick(categoryName))
+        },
+        onProductClick = { productId ->
+            viewModel.onIntent(HomeIntent.OnProductClick(productId))
+        }
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -81,7 +97,6 @@ fun HomeScreenPreview() {
     HomeScreen(
         state = HomeViewState(
             shouldShowLoading = false,
-            shouldShowDefaultError = false,
             rankedProductList = listOf(
                 ProductCategoryResponse(
                     categoryName = "",

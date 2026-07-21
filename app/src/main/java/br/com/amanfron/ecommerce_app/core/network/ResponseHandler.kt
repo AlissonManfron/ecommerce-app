@@ -1,6 +1,6 @@
 package br.com.amanfron.ecommerce_app.core.network
 
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -11,7 +11,9 @@ interface ResponseHandler {
     fun <T> handleResponseFlow(call: suspend () -> Response<T>): Flow<T>
 }
 
-class ResponseHandlerImpl @Inject constructor() : ResponseHandler {
+class ResponseHandlerImpl @Inject constructor(
+    private val coroutineDispatcher: CoroutineDispatcher
+) : ResponseHandler {
 
     private val defaultErrorMessage = "Ops, ocorreu um erro inesperado, tente novamente!"
 
@@ -34,7 +36,7 @@ class ResponseHandlerImpl @Inject constructor() : ResponseHandler {
     }
 
     private suspend fun <T> runSafety(block: suspend () -> Result<T>): Result<T> {
-        return withContext(Dispatchers.IO) {
+        return withContext(coroutineDispatcher) {
             try {
                 block()
             } catch (e: Exception) {

@@ -64,8 +64,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideResponseHandler(): ResponseHandler {
-        return ResponseHandlerImpl()
+    fun provideResponseHandler(ioDispatcher: CoroutineDispatcher): ResponseHandler {
+        return ResponseHandlerImpl(ioDispatcher)
     }
 
     @Provides
