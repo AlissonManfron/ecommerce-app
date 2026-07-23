@@ -2,9 +2,7 @@ package br.com.amanfron.ecommerce_app.features.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.amanfron.ecommerce_app.core.model.response.user.LoginResponse
-import br.com.amanfron.ecommerce_app.core.repository.AuthRepository
-import br.com.amanfron.ecommerce_app.core.repository.UserRepository
+import br.com.amanfron.ecommerce_app.core.domain.usecase.LoginUseCase
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent.OnLoginClick
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent.SetEmail
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent.SetPassword
@@ -23,8 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val authRepository: AuthRepository
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginViewState())
@@ -70,18 +67,13 @@ class LoginViewModel @Inject constructor(
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
             viewModelScope.launch {
-                authRepository.login(email, password)
+                loginUseCase(email, password)
                     .onStart { shouldShowLoading(true) }
                     .onCompletion { shouldShowLoading(false) }
                     .catch { emitEffect(LoginEffect.ShowErrorToast) }
-                    .collect(::onLoginSuccess)
+                    .collect { emitEffect(LoginEffect.NavigateToHome) }
             }
         }
-    }
-
-    private fun onLoginSuccess(response: LoginResponse) {
-        userRepository.setUser(response.name, response.email, response.token)
-        emitEffect(LoginEffect.NavigateToHome)
     }
 
     private fun emitEffect(effect: LoginEffect) {

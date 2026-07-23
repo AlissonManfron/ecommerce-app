@@ -3,14 +3,18 @@ package br.com.amanfron.ecommerce_app.features.cart
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.amanfron.ecommerce_app.core.domain.model.Product
+import br.com.amanfron.ecommerce_app.core.domain.usecase.AddProductToCartUseCase
+import br.com.amanfron.ecommerce_app.core.domain.usecase.DeleteCartItemUseCase
+import br.com.amanfron.ecommerce_app.core.domain.usecase.GetCartItemsUseCase
+import br.com.amanfron.ecommerce_app.core.domain.usecase.GetProductsCountUseCase
 import br.com.amanfron.ecommerce_app.core.local.ProductItem
 import br.com.amanfron.ecommerce_app.core.local.toProduct
-import br.com.amanfron.ecommerce_app.core.local.toProductItem
-import br.com.amanfron.ecommerce_app.core.repository.ShoppingCartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -26,15 +30,21 @@ import javax.inject.Inject
 @HiltViewModel
 class ShoppingCartViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
-    private val shoppingCartRepository: ShoppingCartRepository
+    private val getCartItemsUseCase: GetCartItemsUseCase,
+    private val getProductsCountUseCase: GetProductsCountUseCase,
+    private val deleteCartItemUseCase: DeleteCartItemUseCase,
+    private val addProductToCartUseCase: AddProductToCartUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ShoppingCartViewState())
     val state: StateFlow<ShoppingCartViewState> = _state.asStateFlow()
 
+    private val _effect = MutableSharedFlow<ShoppingCartEffect>()
+    val effect = _effect.asSharedFlow()
+
     init {
         viewModelScope.launch(ioDispatcher) {
-            shoppingCartRepository.getProductItems()
+            getCartItemsUseCase()
                 .take(1)
                 .onStart { shouldShowLoading(true) }
                 .onCompletion { shouldShowLoading(false) }
@@ -93,7 +103,7 @@ class ShoppingCartViewModel @Inject constructor(
             if (product.id == selectedProduct.id) {
                 val newQuantity = product.quantity - 1
                 if (newQuantity <= 0) {
-                    deleteProductToCart(product)
+                    deleteProductFromCart(product)
                     null
                 } else {
                     product.copy(quantity = newQuantity)
@@ -112,31 +122,23 @@ class ShoppingCartViewModel @Inject constructor(
         }
     }
 
-    private fun deleteProductToCart(product: Product) {
+    private fun deleteProductFromCart(product: Product) {
         viewModelScope.launch(ioDispatcher) {
-            shoppingCartRepository.deleteProductItem(product.toProductItem())
+            deleteCartItemUseCase(product)
         }
     }
 
     fun addProductToCart(product: Product) {
         viewModelScope.launch(ioDispatcher) {
-            shoppingCartRepository.insertProductItem(product.toProductItem())
-        }
-    }
-
-    fun clearDefaultError() {
-        _state.update {
-            it.copy(shouldShowDefaultError = false)
+            addProductToCartUseCase(product)
         }
     }
 
     fun getProductsCount() {
         viewModelScope.launch(ioDispatcher) {
-            shoppingCartRepository.getProductsCount()
+            getProductsCountUseCase()
                 .catch {
-                    _state.update { currentState ->
-                        currentState.copy(shouldShowDefaultError = true)
-                    }
+                    emitEffect(ShoppingCartEffect.ShowErrorToast)
                 }
                 .collect(::onGetProductsCountSuccess)
         }
@@ -150,6 +152,12 @@ class ShoppingCartViewModel @Inject constructor(
         }
     }
 
+    private fun emitEffect(effect: ShoppingCartEffect) {
+        viewModelScope.launch {
+            _effect.emit(effect)
+        }
+    }
+
     private fun shouldShowLoading(should: Boolean) {
         _state.update {
             it.copy(shouldShowLoading = should)
@@ -160,7 +168,10 @@ class ShoppingCartViewModel @Inject constructor(
         val products: List<Product> = emptyList(),
         val cartItemCount: Int = 0,
         val totalPrice: String = "",
-        val shouldShowLoading: Boolean = false,
-        val shouldShowDefaultError: Boolean = false
+        val shouldShowLoading: Boolean = false
     )
+
+    sealed interface ShoppingCartEffect {
+        data object ShowErrorToast : ShoppingCartEffect
+    }
 }

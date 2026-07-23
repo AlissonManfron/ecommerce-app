@@ -30,7 +30,6 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,10 +45,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.domain.model.Product
+import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel.ShoppingCartEffect.ShowErrorToast
 import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel.ShoppingCartViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import br.com.amanfron.ecommerce_app.ui.theme.Typography
+import br.com.amanfron.ecommerce_app.ui.utils.ObserveAsEvents
 import coil.compose.AsyncImage
 
 @Composable
@@ -60,23 +61,20 @@ fun ShoppingCartScreen(
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    viewModel.effect.ObserveAsEvents { effect ->
+        when (effect) {
+            is ShowErrorToast -> {
+                Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     ShoppingCartContent(
         modifier = modifier,
         state = state,
         onDecreaseQuantityClick = viewModel::onDecreaseQuantityClick,
         onIncreaseQuantityClick = viewModel::onIncreaseQuantityClick
     )
-
-    LaunchedEffect(state.shouldShowDefaultError) {
-        if (state.shouldShowDefaultError) {
-            viewModel.clearDefaultError()
-            Toast.makeText(
-                context,
-                R.string.try_again_message,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
 }
 
 @Composable

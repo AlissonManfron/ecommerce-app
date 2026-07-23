@@ -32,15 +32,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.domain.model.Product
-import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartViewModel
+import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailEffect.NavigateBack
+import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailEffect.NavigateToCart
+import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailEffect.ShowAddToCartToast
+import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailEffect.ShowErrorToast
 import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
+import br.com.amanfron.ecommerce_app.ui.utils.ObserveAsEvents
 import coil.compose.AsyncImage
 
 @Composable
 fun ProductDetailScreen(
     viewModel: ProductDetailViewModel = hiltViewModel(),
-    shoppingCartViewModel: ShoppingCartViewModel = hiltViewModel(),
     productId: Int,
     onGoToCart: () -> Unit,
     onBackClick: () -> Boolean
@@ -48,40 +51,31 @@ fun ProductDetailScreen(
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    viewModel.effect.ObserveAsEvents { effect ->
+        when (effect) {
+            is NavigateToCart -> onGoToCart()
+            is NavigateBack -> onBackClick()
+            is ShowErrorToast -> {
+                Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
+            }
+            is ShowAddToCartToast -> {
+                Toast.makeText(context, R.string.add_product_to_cart_message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     ProductDetailScreen(
         state,
         onPurchaseProductClick = {
-            state.product?.let {
-                shoppingCartViewModel.addProductToCart(it)
-            }
-            onGoToCart()
+            viewModel.onIntent(ProductDetailViewModel.ProductDetailIntent.OnBuyClick)
         },
         onAddProductToCartClick = {
-            state.product?.let {
-                shoppingCartViewModel.addProductToCart(it)
-                Toast.makeText(
-                    context,
-                    R.string.add_product_to_cart_message, Toast.LENGTH_SHORT
-                ).show()
-            }
-            onBackClick()
+            viewModel.onIntent(ProductDetailViewModel.ProductDetailIntent.OnAddToCartClick)
         }
     )
 
     LaunchedEffect(Unit) {
-        viewModel.getProduct(productId)
-    }
-
-    LaunchedEffect(state) {
-        when {
-            state.shouldShowDefaultError -> {
-                state.shouldShowDefaultError = false
-                Toast.makeText(
-                    context,
-                    R.string.try_again_message, Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+        viewModel.onIntent(ProductDetailViewModel.ProductDetailIntent.LoadProduct(productId))
     }
 }
 

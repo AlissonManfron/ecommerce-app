@@ -2,10 +2,10 @@ package br.com.amanfron.ecommerce_app.features.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.amanfron.ecommerce_app.core.domain.usecase.GetRankedProductsUseCase
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductsResponse
-import br.com.amanfron.ecommerce_app.core.repository.ProductRepository
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToProductDetail
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToSeeMore
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.ShowErrorToast
@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: ProductRepository
+    private val getRankedProductsUseCase: GetRankedProductsUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeViewState())
@@ -49,7 +49,7 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchProducts() {
         viewModelScope.launch {
-            repository.getRankedProducts()
+            getRankedProductsUseCase()
                 .onStart { shouldShowLoading(true) }
                 .onCompletion { shouldShowLoading(false) }
                 .catch { emitEffect(ShowErrorToast) }
