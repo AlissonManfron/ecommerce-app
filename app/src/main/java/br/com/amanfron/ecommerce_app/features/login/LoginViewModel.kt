@@ -1,36 +1,27 @@
 package br.com.amanfron.ecommerce_app.features.login
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.amanfron.ecommerce_app.core.architecture.BaseViewModel
 import br.com.amanfron.ecommerce_app.core.domain.usecase.LoginUseCase
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginEffect
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent.OnLoginClick
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent.SetEmail
 import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginIntent.SetPassword
+import br.com.amanfron.ecommerce_app.features.login.LoginViewModel.LoginViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase
-) : ViewModel() {
+) : BaseViewModel<LoginViewState, LoginIntent, LoginEffect>(LoginViewState()) {
 
-    private val _state = MutableStateFlow(LoginViewState())
-    val state: StateFlow<LoginViewState> = _state.asStateFlow()
-
-    private val _effect = MutableSharedFlow<LoginEffect>()
-    val effect = _effect.asSharedFlow()
-
-    fun onIntent(intent: LoginIntent) {
+    override fun onIntent(intent: LoginIntent) {
         when (intent) {
             is SetEmail -> setEmail(intent.email)
             is SetPassword -> setPassword(intent.password)
@@ -39,31 +30,31 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun setEmail(newEmail: String) {
-        _state.update {
+        updateState {
             it.copy(email = newEmail)
         }
         checkFieldErrors()
     }
 
     private fun setPassword(newPassword: String) {
-        _state.update {
+        updateState {
             it.copy(password = newPassword)
         }
         checkFieldErrors()
     }
 
     private fun checkFieldErrors() {
-        _state.update {
+        updateState {
             it.copy(
-                isEmailError = _state.value.email.isEmpty(),
-                isPasswordError = _state.value.password.isEmpty()
+                isEmailError = currentState.email.isEmpty(),
+                isPasswordError = currentState.password.isEmpty()
             )
         }
     }
 
     private fun onLoginButtonClick() {
-        val email = _state.value.email
-        val password = _state.value.password
+        val email = currentState.email
+        val password = currentState.password
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
             viewModelScope.launch {
@@ -76,14 +67,8 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun emitEffect(effect: LoginEffect) {
-        viewModelScope.launch {
-            _effect.emit(effect)
-        }
-    }
-
     private fun shouldShowLoading(should: Boolean) {
-        _state.update {
+        updateState {
             it.copy(shouldShowLoading = should)
         }
     }

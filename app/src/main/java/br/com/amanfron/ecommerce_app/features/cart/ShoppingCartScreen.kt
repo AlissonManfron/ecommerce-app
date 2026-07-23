@@ -72,8 +72,12 @@ fun ShoppingCartScreen(
     ShoppingCartContent(
         modifier = modifier,
         state = state,
-        onDecreaseQuantityClick = viewModel::onDecreaseQuantityClick,
-        onIncreaseQuantityClick = viewModel::onIncreaseQuantityClick
+        onDecreaseQuantityClick = {
+            viewModel.onIntent(ShoppingCartViewModel.ShoppingCartIntent.OnDecreaseQuantityClick(it))
+        },
+        onIncreaseQuantityClick = {
+            viewModel.onIntent(ShoppingCartViewModel.ShoppingCartIntent.OnIncreaseQuantityClick(it))
+        }
     )
 }
 

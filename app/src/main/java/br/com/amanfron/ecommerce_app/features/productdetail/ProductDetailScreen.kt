@@ -1,6 +1,7 @@
 package br.com.amanfron.ecommerce_app.features.productdetail
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
+import br.com.amanfron.ecommerce_app.core.architecture.UiState
 import br.com.amanfron.ecommerce_app.core.domain.model.Product
 import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailEffect.NavigateBack
 import br.com.amanfron.ecommerce_app.features.productdetail.ProductDetailViewModel.ProductDetailEffect.NavigateToCart
@@ -49,7 +51,7 @@ fun ProductDetailScreen(
     onBackClick: () -> Boolean
 ) {
     val context = LocalContext.current
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
 
     viewModel.effect.ObserveAsEvents { effect ->
         when (effect) {
@@ -64,15 +66,27 @@ fun ProductDetailScreen(
         }
     }
 
-    ProductDetailScreen(
-        state,
-        onPurchaseProductClick = {
-            viewModel.onIntent(ProductDetailViewModel.ProductDetailIntent.OnBuyClick)
-        },
-        onAddProductToCartClick = {
-            viewModel.onIntent(ProductDetailViewModel.ProductDetailIntent.OnAddToCartClick)
+    when (val state = uiState) {
+        is UiState.Loading -> {
+            LoadingContentView(shouldShowLoading = true) {}
         }
-    )
+        is UiState.Success -> {
+            ProductDetailScreen(
+                state.data,
+                onPurchaseProductClick = {
+                    viewModel.onIntent(ProductDetailViewModel.ProductDetailIntent.OnBuyClick)
+                },
+                onAddProductToCartClick = {
+                    viewModel.onIntent(ProductDetailViewModel.ProductDetailIntent.OnAddToCartClick)
+                }
+            )
+        }
+        is UiState.Error -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Ocorreu um erro ao carregar os detalhes do produto.")
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(ProductDetailViewModel.ProductDetailIntent.LoadProduct(productId))
@@ -85,128 +99,125 @@ private fun ProductDetailScreen(
     onPurchaseProductClick: () -> Unit,
     onAddProductToCartClick: () -> Unit
 ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                start = 24.dp,
+                end = 24.dp
+            )
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
 
-    LoadingContentView(shouldShowLoading = state.shouldShowLoading) {
+        Text(
+            text = state.product.title,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    start = 24.dp,
-                    end = 24.dp
-                )
-                .verticalScroll(rememberScrollState())
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = state.product?.title ?: "",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+            AsyncImage(
+                model = state.product.imageUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .size(300.dp)
+                    .padding(16.dp)
             )
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(),
+            elevation = CardDefaults.elevatedCardElevation(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors()
+        ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(16.dp)
             ) {
-                AsyncImage(
-                    model = state.product?.imageUrl,
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .size(300.dp)
-                        .padding(16.dp)
+                Text(
+                    text = "Descrição:",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = state.product.description,
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                elevation = CardDefaults.elevatedCardElevation(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors()
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "Descrição:",
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = state.product?.description ?: "",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                elevation = CardDefaults.elevatedCardElevation(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors()
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "Preço:",
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        text = "R$ ${state.product?.price}",
-                        style = MaterialTheme.typography.headlineSmall,
-                        lineHeight = 14.sp
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = onPurchaseProductClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-            ) {
-                Text(text = "Comprar")
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedButton(
-                onClick = onAddProductToCartClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-            ) {
-                Text(text = "Adicionar ao carrinho")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(),
+            elevation = CardDefaults.elevatedCardElevation(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors()
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Preço:",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = "R$ ${state.product.price}",
+                    style = MaterialTheme.typography.headlineSmall,
+                    lineHeight = 14.sp
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = onPurchaseProductClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+        ) {
+            Text(text = "Comprar")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedButton(
+            onClick = onAddProductToCartClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+        ) {
+            Text(text = "Adicionar ao carrinho")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
