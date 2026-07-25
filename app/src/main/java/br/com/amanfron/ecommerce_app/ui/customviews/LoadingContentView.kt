@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 fun LoadingContentView(
     modifier: Modifier = Modifier,
     shouldShowLoading: Boolean,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit = {}
 ) {
     if (shouldShowLoading) {
         Column(
@@ -57,6 +57,6 @@ fun LoadingContentView(
 @Composable
 fun LoadingContentViewPreview() = MaterialTheme {
     Column(modifier = Modifier.padding(4.dp)) {
-        LoadingContentView(shouldShowLoading = true) {}
+        LoadingContentView(shouldShowLoading = true)
     }
 }

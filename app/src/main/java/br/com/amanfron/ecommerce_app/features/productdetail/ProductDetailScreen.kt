@@ -60,16 +60,19 @@ fun ProductDetailScreen(
             is ShowErrorToast -> {
                 Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT).show()
             }
+
             is ShowAddToCartToast -> {
-                Toast.makeText(context, R.string.add_product_to_cart_message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.add_product_to_cart_message, Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
     when (val state = uiState) {
         is UiState.Loading -> {
-            LoadingContentView(shouldShowLoading = true) {}
+            LoadingContentView(shouldShowLoading = true)
         }
+
         is UiState.Success -> {
             ProductDetailScreen(
                 state.data,
@@ -81,6 +84,7 @@ fun ProductDetailScreen(
                 }
             )
         }
+
         is UiState.Error -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = "Ocorreu um erro ao carregar os detalhes do produto.")

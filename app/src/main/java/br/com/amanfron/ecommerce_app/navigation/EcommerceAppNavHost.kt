@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import br.com.amanfron.ecommerce_app.features.cart.ShoppingCartScreen
+import br.com.amanfron.ecommerce_app.features.category.CategoryScreen
 import br.com.amanfron.ecommerce_app.features.createaccount.CreateAccountScreen
 import br.com.amanfron.ecommerce_app.features.home.HomeScreen
 import br.com.amanfron.ecommerce_app.features.login.LoginScreen
@@ -45,6 +46,11 @@ fun EcommerceAppNavHost(
             },
             navigateToProductDetail = directions.navigateToProductDetail
         )
+    }
+
+    composable<CategoryRoute> { backStackEntry ->
+        val route: CategoryRoute = backStackEntry.toRoute()
+        CategoryScreen(categoryName = route.categoryName)
     }
 
     composable<ShoppingCartRoute> {

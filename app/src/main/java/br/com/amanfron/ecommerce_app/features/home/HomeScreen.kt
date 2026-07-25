@@ -57,8 +57,9 @@ fun HomeScreen(
 
     when (val state = uiState) {
         is UiState.Loading -> {
-            LoadingContentView(shouldShowLoading = true) {}
+            LoadingContentView(shouldShowLoading = true)
         }
+
         is UiState.Success -> {
             HomeScreen(
                 modifier = modifier,
@@ -71,6 +72,7 @@ fun HomeScreen(
                 }
             )
         }
+
         is UiState.Error -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = "Ocorreu um erro ao carregar os produtos.")
