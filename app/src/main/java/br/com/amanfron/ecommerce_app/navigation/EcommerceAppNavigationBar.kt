@@ -1,5 +1,6 @@
 package br.com.amanfron.ecommerce_app.navigation
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -12,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -41,7 +43,9 @@ fun EcommerceAppNavigationBar(
                         BadgedBox(
                             badge = {
                                 if (state.cartItemCount > 0) {
-                                    Badge {
+                                    Badge(
+                                        modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                                    ) {
                                         Text(
                                             text = state.cartItemCount.toString(),
                                             modifier = Modifier.semantics {
