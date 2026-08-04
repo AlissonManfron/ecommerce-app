@@ -41,7 +41,7 @@ data class ProductDetailsRoute(val productId: Int) {
 }
 
 @Serializable
-data class CategoryRoute(val categoryName: String)
+data class CategoryRoute(val categoryId: Int)
 
 interface BottomNavItem {
     val route: Any

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun CategoryScreen(
-    categoryName: String
+    categoryId: Int
 ) {
     Scaffold { innerPadding ->
         Box(
@@ -22,7 +22,7 @@ fun CategoryScreen(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Categoria: $categoryName",
+                text = "Categoria: $categoryId",
                 style = MaterialTheme.typography.headlineMedium
             )
         }

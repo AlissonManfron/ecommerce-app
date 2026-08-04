@@ -32,7 +32,7 @@ import br.com.amanfron.ecommerce_app.ui.utils.ObserveAsEvents
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    navigateToSeeMore: (categoryName: String) -> Unit,
+    navigateToSeeMore: (categoryId: Int) -> Unit,
     navigateToProductDetail: (productId: Int) -> Unit
 ) {
     val context = LocalContext.current
@@ -50,7 +50,7 @@ fun HomeScreen(
             }
 
             is NavigateToSeeMore -> {
-                navigateToSeeMore(effect.categoryName)
+                navigateToSeeMore(effect.categoryId)
             }
         }
     }
@@ -86,7 +86,7 @@ fun HomeScreen(
 private fun HomeScreen(
     modifier: Modifier = Modifier,
     state: HomeViewState,
-    onSeeMoreClick: (categoryName: String) -> Unit,
+    onSeeMoreClick: (categoryId: Int) -> Unit,
     onProductClick: (productId: Int) -> Unit
 ) {
     LazyColumn(
@@ -114,6 +114,7 @@ fun HomeScreenPreview() {
         state = HomeViewState(
             rankedProductList = listOf(
                 ProductCategoryResponse(
+                    categoryId = 1,
                     categoryName = "",
                     products = listOf(
                         ProductResponse(

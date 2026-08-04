@@ -16,6 +16,9 @@ data class ProductCategoryResponse(
     @Json(name = "category_name")
     val categoryName: String,
 
+    @Json(name = "category_id")
+    val categoryId: Int,
+
     @Json(name = "products")
     val products: List<ProductResponse>
 )

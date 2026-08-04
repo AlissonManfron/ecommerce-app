@@ -32,6 +32,10 @@ class EcommerceDirections(
         navController.navigate(ProductDetailsRoute(productId))
     }
 
+    val navigateToCategory: (categoryId: Int) -> Unit = { categoryId ->
+        navController.navigate(CategoryRoute(categoryId))
+    }
+
     val navigateToCreateAccount = {
         navController.navigate(CreateAccountRoute)
     }

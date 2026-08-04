@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
+import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import br.com.amanfron.ecommerce_app.ui.theme.Typography
 
@@ -26,12 +26,13 @@ import br.com.amanfron.ecommerce_app.ui.theme.Typography
 fun ProductSectionView(
     modifier: Modifier = Modifier,
     rankedProductList: List<ProductCategoryResponse>,
-    onSeeMoreClick: (categoryName: String) -> Unit,
+    onSeeMoreClick: (categoryId: Int) -> Unit,
     onProductClick: (productId: Int) -> Unit
 ) {
     rankedProductList.forEach {
         ProductSectionView(
             modifier = modifier,
+            categoryId = it.categoryId,
             categoryName = it.categoryName,
             productList = it.products,
             onSeeMoreClick = onSeeMoreClick,
@@ -43,9 +44,10 @@ fun ProductSectionView(
 @Composable
 fun ProductSectionView(
     modifier: Modifier = Modifier,
+    categoryId: Int,
     categoryName: String,
     productList: List<ProductResponse>,
-    onSeeMoreClick: (categoryName: String) -> Unit,
+    onSeeMoreClick: (categoryId: Int) -> Unit,
     onProductClick: (productId: Int) -> Unit
 ) {
     Column(
@@ -78,7 +80,7 @@ fun ProductSectionView(
                     textAlign = TextAlign.End,
                     fontSize = Typography.bodyMedium.fontSize,
                     modifier = Modifier.clickable(
-                        onClick = { onSeeMoreClick.invoke(categoryName) }
+                        onClick = { onSeeMoreClick.invoke(categoryId) }
                     )
                 )
             }
@@ -108,6 +110,7 @@ fun ProductSectionView(
 @Composable
 fun ProductSectionPreview() = EcommerceAppTheme {
     ProductSectionView(
+        categoryId = 1,
         categoryName = "Teste",
         productList = listOf(
             ProductResponse(

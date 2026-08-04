@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.Int
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -35,7 +36,7 @@ class HomeViewModel @Inject constructor(
         when (intent) {
             is LoadProducts -> fetchProducts()
             is OnProductClick -> emitEffect(NavigateToProductDetail(intent.productId))
-            is OnSeeMoreClick -> emitEffect(NavigateToSeeMore(intent.categoryName))
+            is OnSeeMoreClick -> emitEffect(NavigateToSeeMore(intent.categoryId))
         }
     }
 
@@ -70,12 +71,12 @@ class HomeViewModel @Inject constructor(
     sealed interface HomeIntent {
         data object LoadProducts : HomeIntent
         data class OnProductClick(val productId: Int) : HomeIntent
-        data class OnSeeMoreClick(val categoryName: String) : HomeIntent
+        data class OnSeeMoreClick(val categoryId: Int) : HomeIntent
     }
 
     sealed interface HomeEffect {
         data object ShowErrorToast : HomeEffect
         data class NavigateToProductDetail(val productId: Int) : HomeEffect
-        data class NavigateToSeeMore(val categoryName: String) : HomeEffect
+        data class NavigateToSeeMore(val categoryId: Int) : HomeEffect
     }
 }

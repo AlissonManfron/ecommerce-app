@@ -1,11 +1,9 @@
 package br.com.amanfron.ecommerce_app.navigation
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,19 +36,16 @@ fun EcommerceAppNavHost(
     }
 
     composable<HomeRoute> {
-        val context = LocalContext.current
         HomeScreen(
             modifier = Modifier.padding(innerPadding),
-            navigateToSeeMore = { category ->
-                Toast.makeText(context, category, Toast.LENGTH_SHORT).show()
-            },
+            navigateToSeeMore = directions.navigateToCategory,
             navigateToProductDetail = directions.navigateToProductDetail
         )
     }
 
     composable<CategoryRoute> { backStackEntry ->
         val route: CategoryRoute = backStackEntry.toRoute()
-        CategoryScreen(categoryName = route.categoryName)
+        CategoryScreen(categoryId = route.categoryId)
     }
 
     composable<ShoppingCartRoute> {
