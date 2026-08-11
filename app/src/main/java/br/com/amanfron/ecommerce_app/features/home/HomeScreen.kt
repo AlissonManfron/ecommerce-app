@@ -1,9 +1,9 @@
 package br.com.amanfron.ecommerce_app.features.home
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,15 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.amanfron.ecommerce_app.R
 import br.com.amanfron.ecommerce_app.core.architecture.UiState
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
+import br.com.amanfron.ecommerce_app.core.domain.model.Product
+import br.com.amanfron.ecommerce_app.core.domain.model.ProductCategory
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToProductDetail
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToSeeMore
-import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.ShowErrorToast
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeIntent
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeViewState
 import br.com.amanfron.ecommerce_app.ui.customviews.LoadingContentView
@@ -40,11 +40,6 @@ fun HomeScreen(
 
     viewModel.effect.ObserveAsEvents { effect ->
         when (effect) {
-            is ShowErrorToast -> {
-                Toast.makeText(context, R.string.try_again_message, Toast.LENGTH_SHORT)
-                    .show()
-            }
-
             is NavigateToProductDetail -> {
                 navigateToProductDetail(effect.productId)
             }
@@ -61,11 +56,11 @@ fun HomeScreen(
         }
 
         is UiState.Success -> {
-            HomeScreen(
+            HomeContent(
                 modifier = modifier,
                 state = state.data,
-                onSeeMoreClick = { categoryName ->
-                    viewModel.onIntent(HomeIntent.OnSeeMoreClick(categoryName))
+                onSeeMoreClick = { categoryId ->
+                    viewModel.onIntent(HomeIntent.OnSeeMoreClick(categoryId))
                 },
                 onProductClick = { productId ->
                     viewModel.onIntent(HomeIntent.OnProductClick(productId))
@@ -74,8 +69,13 @@ fun HomeScreen(
         }
 
         is UiState.Error -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Ocorreu um erro ao carregar os produtos.")
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = context.getString(R.string.home_screen_not_found_products_message))
             }
         }
     }
@@ -83,7 +83,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun HomeScreen(
+private fun HomeContent(
     modifier: Modifier = Modifier,
     state: HomeViewState,
     onSeeMoreClick: (categoryId: Int) -> Unit,
@@ -110,21 +110,21 @@ private fun HomeScreen(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(
+    HomeContent(
         state = HomeViewState(
             rankedProductList = listOf(
-                ProductCategoryResponse(
+                ProductCategory(
                     categoryId = 1,
-                    categoryName = "",
+                    categoryName = "Eletrônicos",
                     products = listOf(
-                        ProductResponse(
+                        Product(
                             id = 0,
-                            title = "Title",
+                            title = "Celular",
                             description = "Description",
                             imageUrl = "",
-                            price = "20.0",
+                            price = "2000.0",
                             categoryId = 1,
-                            categoryName = ""
+                            categoryName = "Eletrônicos"
                         )
                     )
                 )

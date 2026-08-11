@@ -3,14 +3,13 @@ package br.com.amanfron.ecommerce_app.features.home
 import androidx.lifecycle.viewModelScope
 import br.com.amanfron.ecommerce_app.core.architecture.BaseViewModel
 import br.com.amanfron.ecommerce_app.core.architecture.UiState
+import br.com.amanfron.ecommerce_app.core.domain.model.Product
+import br.com.amanfron.ecommerce_app.core.domain.model.ProductCategory
+import br.com.amanfron.ecommerce_app.core.domain.model.RankedProducts
 import br.com.amanfron.ecommerce_app.core.domain.usecase.GetRankedProductsUseCase
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductsResponse
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToProductDetail
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.NavigateToSeeMore
-import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeEffect.ShowErrorToast
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeIntent
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeIntent.LoadProducts
 import br.com.amanfron.ecommerce_app.features.home.HomeViewModel.HomeIntent.OnProductClick
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.Int
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -44,28 +42,27 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getRankedProductsUseCase()
                 .onStart { updateState { UiState.Loading } }
-                .catch {
-                    updateState { UiState.Error() }
-                    emitEffect(ShowErrorToast)
+                .catch { updateState { UiState.Error() } }
+                .collect { rankedProducts ->
+                    onGetRankedProductsSuccess(rankedProducts)
                 }
-                .collect(::onGetRankedProductsSuccess)
         }
     }
 
-    private fun onGetRankedProductsSuccess(response: ProductsResponse) {
+    private fun onGetRankedProductsSuccess(rankedProducts: RankedProducts) {
         updateState {
             UiState.Success(
                 HomeViewState(
-                    bannerProductList = response.bannerProductList,
-                    rankedProductList = response.rankedProductList
+                    bannerProductList = rankedProducts.bannerProducts,
+                    rankedProductList = rankedProducts.rankedProducts
                 )
             )
         }
     }
 
     data class HomeViewState(
-        val bannerProductList: List<ProductResponse> = emptyList(),
-        val rankedProductList: List<ProductCategoryResponse> = emptyList()
+        val bannerProductList: List<Product> = emptyList(),
+        val rankedProductList: List<ProductCategory> = emptyList()
     )
 
     sealed interface HomeIntent {
@@ -75,7 +72,6 @@ class HomeViewModel @Inject constructor(
     }
 
     sealed interface HomeEffect {
-        data object ShowErrorToast : HomeEffect
         data class NavigateToProductDetail(val productId: Int) : HomeEffect
         data class NavigateToSeeMore(val categoryId: Int) : HomeEffect
     }

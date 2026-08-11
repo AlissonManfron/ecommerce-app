@@ -45,7 +45,10 @@ fun EcommerceAppNavHost(
 
     composable<CategoryRoute> { backStackEntry ->
         val route: CategoryRoute = backStackEntry.toRoute()
-        CategoryScreen(categoryId = route.categoryId)
+        CategoryScreen(
+            categoryId = route.categoryId,
+            navigateToProductDetail = directions.navigateToProductDetail
+        )
     }
 
     composable<ShoppingCartRoute> {

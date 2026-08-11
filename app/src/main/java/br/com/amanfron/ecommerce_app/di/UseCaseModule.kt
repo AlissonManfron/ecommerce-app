@@ -4,6 +4,7 @@ import br.com.amanfron.ecommerce_app.core.domain.usecase.AddProductToCartUseCase
 import br.com.amanfron.ecommerce_app.core.domain.usecase.DeleteCartItemUseCase
 import br.com.amanfron.ecommerce_app.core.domain.usecase.GetCartItemsUseCase
 import br.com.amanfron.ecommerce_app.core.domain.usecase.GetProductDetailUseCase
+import br.com.amanfron.ecommerce_app.core.domain.usecase.GetProductsByCategoryUseCase
 import br.com.amanfron.ecommerce_app.core.domain.usecase.GetProductsCountUseCase
 import br.com.amanfron.ecommerce_app.core.domain.usecase.GetRankedProductsUseCase
 import br.com.amanfron.ecommerce_app.core.domain.usecase.LoginUseCase
@@ -31,6 +32,12 @@ object UseCaseModule {
     @Singleton
     fun provideGetProductDetailUseCase(repository: ProductRepository): GetProductDetailUseCase {
         return GetProductDetailUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetProductsByCategoryUseCase(repository: ProductRepository): GetProductsByCategoryUseCase {
+        return GetProductsByCategoryUseCase(repository)
     }
 
     @Provides

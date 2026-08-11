@@ -17,15 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductCategoryResponse
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
+import br.com.amanfron.ecommerce_app.core.domain.model.Product
+import br.com.amanfron.ecommerce_app.core.domain.model.ProductCategory
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import br.com.amanfron.ecommerce_app.ui.theme.Typography
 
 @Composable
 fun ProductSectionView(
     modifier: Modifier = Modifier,
-    rankedProductList: List<ProductCategoryResponse>,
+    rankedProductList: List<ProductCategory>,
     onSeeMoreClick: (categoryId: Int) -> Unit,
     onProductClick: (productId: Int) -> Unit
 ) {
@@ -46,7 +46,7 @@ fun ProductSectionView(
     modifier: Modifier = Modifier,
     categoryId: Int,
     categoryName: String,
-    productList: List<ProductResponse>,
+    productList: List<Product>,
     onSeeMoreClick: (categoryId: Int) -> Unit,
     onProductClick: (productId: Int) -> Unit
 ) {
@@ -72,16 +72,13 @@ fun ProductSectionView(
             )
 
             TextButton(
-                onClick = { },
+                onClick = { onSeeMoreClick(categoryId) },
                 modifier = Modifier.padding(end = 16.dp)
             ) {
                 Text(
                     text = "Ver mais",
                     textAlign = TextAlign.End,
-                    fontSize = Typography.bodyMedium.fontSize,
-                    modifier = Modifier.clickable(
-                        onClick = { onSeeMoreClick.invoke(categoryId) }
-                    )
+                    fontSize = Typography.bodyMedium.fontSize
                 )
             }
         }
@@ -113,14 +110,15 @@ fun ProductSectionPreview() = EcommerceAppTheme {
         categoryId = 1,
         categoryName = "Teste",
         productList = listOf(
-            ProductResponse(
+            Product(
                 id = 0,
                 title = "Title",
                 description = "Description",
                 imageUrl = "",
                 price = "20.0",
                 categoryId = 1,
-                categoryName = ""
+                categoryName = "",
+                quantity = 1
             ),
         ),
         onSeeMoreClick = {},

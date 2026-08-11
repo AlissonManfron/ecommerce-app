@@ -33,16 +33,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.amanfron.ecommerce_app.core.model.response.product.ProductResponse
+import br.com.amanfron.ecommerce_app.core.domain.model.Product
 import br.com.amanfron.ecommerce_app.ui.theme.EcommerceAppTheme
 import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductSectionBannerView(
     modifier: Modifier = Modifier,
-    productList: List<ProductResponse>,
+    productList: List<Product>,
     pagerState: PagerState = rememberPagerState { productList.size },
     onProductClick: (productId: Int) -> Unit
 ) {
@@ -50,8 +51,10 @@ fun ProductSectionBannerView(
 
     LaunchedEffect(pagerState.currentPage) {
         while (true) {
-            delay(3000)
-            pagerState.scrollToPage((pagerState.currentPage + 1) % totalPages)
+            delay(3000.milliseconds)
+            if (totalPages > 0) {
+                pagerState.scrollToPage((pagerState.currentPage + 1) % totalPages)
+            }
         }
     }
 
@@ -76,7 +79,7 @@ fun ProductSectionBannerView(
 fun ProductSectionBannerView(
     modifier: Modifier = Modifier,
     cardColors: CardColors,
-    productList: List<ProductResponse>,
+    productList: List<Product>,
     pagerState: PagerState,
     onProductClick: (productId: Int) -> Unit
 ) {
@@ -95,9 +98,9 @@ fun ProductSectionBannerView(
         ) { page ->
             Surface(
                 modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .clickable { onProductClick(productList[page].id) },
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { onProductClick(productList[page].id) },
                 color = MaterialTheme.colorScheme.secondaryContainer,
                 shape = RoundedCornerShape(16.dp)
             ) {
@@ -153,14 +156,15 @@ fun PageIndicator(totalPages: Int, currentPage: Int) {
 fun ProductSectionBannerViewPreview() = EcommerceAppTheme {
     ProductSectionBannerView(
         productList = listOf(
-            ProductResponse(
+            Product(
                 0,
                 "Title",
                 "Description",
                 "",
                 "20.0",
                 1,
-                ""
+                "",
+                1
             ),
         ),
         onProductClick = {}
